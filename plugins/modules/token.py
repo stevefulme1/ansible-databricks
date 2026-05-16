@@ -49,7 +49,6 @@ token_value:
   description: The token string (only on creation).
   type: str
   returned: when state is present
-  no_log: true
 token_info:
   description: Token metadata.
   type: dict

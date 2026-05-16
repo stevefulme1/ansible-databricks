@@ -20,7 +20,6 @@ options:
       - Personal access token or service principal token for authentication.
     type: str
     required: true
-    no_log: true
   validate_certs:
     description:
       - Whether to validate SSL certificates.
