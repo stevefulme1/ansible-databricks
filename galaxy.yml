@@ -1,0 +1,27 @@
+---
+namespace: stevefulme1
+name: databricks
+version: 1.0.0
+readme: README.md
+authors:
+  - Steve Fulmer (@stevefulme1)
+description: Manage Databricks workspaces, clusters, Unity Catalog, IAM, jobs, and secrets.
+license_file: LICENSE
+tags:
+  - databricks
+  - unity-catalog
+  - mlflow
+  - spark
+  - data-engineering
+  - ai
+  - automation
+repository: https://github.com/stevefulme1/ansible-databricks
+documentation: https://github.com/stevefulme1/ansible-databricks
+homepage: https://github.com/stevefulme1/ansible-databricks
+issues: https://github.com/stevefulme1/ansible-databricks/issues
+build_ignore:
+  - .github
+  - tests
+  - .gitignore
+  - '*.tar.gz'
+requires_ansible: ">=2.16.0"
