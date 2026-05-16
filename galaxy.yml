@@ -9,10 +9,10 @@ description: Manage Databricks workspaces, clusters, Unity Catalog, IAM, jobs, a
 license_file: LICENSE
 tags:
   - databricks
-  - unity-catalog
+  - unitycatalog
   - mlflow
   - spark
-  - data-engineering
+  - dataengineering
   - ai
   - automation
 repository: https://github.com/stevefulme1/ansible-databricks
@@ -24,4 +24,3 @@ build_ignore:
   - tests
   - .gitignore
   - '*.tar.gz'
-requires_ansible: ">=2.16.0"
