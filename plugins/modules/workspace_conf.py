@@ -61,7 +61,7 @@ from ansible_collections.stevefulme1.databricks.plugins.module_utils.databricks_
 def main():
     argument_spec = databricks_argument_spec()
     argument_spec.update(
-        keys=dict(type="list", elements="str"),
+        keys=dict(type="list", elements="str", no_log=False),
         config=dict(type="dict"),
     )
 

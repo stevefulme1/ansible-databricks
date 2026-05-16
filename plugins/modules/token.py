@@ -67,7 +67,7 @@ def main():
     argument_spec = databricks_argument_spec()
     argument_spec.update(
         state=dict(type="str", default="present", choices=["present", "absent"]),
-        token_id=dict(type="str"),
+        token_id=dict(type="str", no_log=False),
         comment=dict(type="str"),
         lifetime_seconds=dict(type="int", default=7776000),
     )
