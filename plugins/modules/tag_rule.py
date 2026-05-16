@@ -73,7 +73,7 @@ def main():
         state=dict(type="str", default="present", choices=["present", "absent"]),
         metastore_id=dict(type="str", required=True),
         schema_name=dict(type="str"),
-        tag_key=dict(type="str"),
+        tag_key=dict(type="str", no_log=False),
         tag_values=dict(type="list", elements="str"),
     )
 
