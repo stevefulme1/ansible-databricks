@@ -15,6 +15,7 @@ tags:
   - dataengineering
   - ai
   - automation
+  - cloud
 repository: https://github.com/stevefulme1/ansible-databricks
 documentation: https://github.com/stevefulme1/ansible-databricks
 homepage: https://github.com/stevefulme1/ansible-databricks

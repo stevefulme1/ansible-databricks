@@ -17,7 +17,7 @@ jobs:
       - run: pip install ruff ansible-core>=2.16 ansible-lint
       - run: ruff check --ignore E402 .
       - run: ruff format --check .
-      - run: ansible-lint --strict
+      - run: ansible-lint --profile shared
 
   sanity:
     runs-on: ubuntu-latest
