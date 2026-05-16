@@ -1,0 +1,77 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# Copyright: (c) 2026, Steve Fulmer
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+from __future__ import absolute_import, division, print_function
+
+__metaclass__ = type
+
+DOCUMENTATION = r"""
+---
+module: data_monitor_refresh
+short_description: Trigger a Lakehouse monitor refresh
+description:
+  - Trigger a metric refresh for a Lakehouse monitor.
+version_added: "1.1.0"
+author: Steve Fulmer (@stevefulme1)
+options:
+  table_name:
+    description: Full table name (catalog.schema.table).
+    type: str
+    required: true
+extends_documentation_fragment:
+  - stevefulme1.databricks.databricks
+"""
+
+EXAMPLES = r"""
+- name: Refresh monitor metrics
+  stevefulme1.databricks.data_monitor_refresh:
+    host: https://adb-123.4.azuredatabricks.net
+    token: dapi0123456789abcdef
+    table_name: catalog.schema.my_table
+"""
+
+RETURN = r"""
+refresh:
+  description: Refresh response.
+  type: dict
+  returned: always
+"""
+
+from ansible.module_utils.basic import AnsibleModule
+from ansible_collections.stevefulme1.databricks.plugins.module_utils.databricks_client import (
+    DatabricksClient,
+    DatabricksError,
+    databricks_argument_spec,
+)
+
+
+def main():
+    argument_spec = databricks_argument_spec()
+    argument_spec.update(
+        table_name=dict(type="str", required=True),
+    )
+
+    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=True)
+    client = DatabricksClient(
+        host=module.params["host"],
+        token=module.params["token"],
+        validate_certs=module.params["validate_certs"],
+    )
+
+    try:
+        if module.check_mode:
+            module.exit_json(changed=True)
+        resp = client.post(
+            "unity-catalog/tables/{0}/monitor/refreshes".format(
+                module.params["table_name"]
+            )
+        )
+        module.exit_json(changed=True, refresh=resp)
+    except DatabricksError as e:
+        module.fail_json(msg=str(e))
+
+
+if __name__ == "__main__":
+    main()
