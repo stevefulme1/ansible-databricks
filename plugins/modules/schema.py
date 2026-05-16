@@ -4,6 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
@@ -80,22 +81,22 @@ def main():
     )
 
     state = module.params["state"]
-    full_name = "{0}.{1}".format(module.params["catalog_name"],
-                                 module.params["name"])
+    full_name = "{0}.{1}".format(module.params["catalog_name"], module.params["name"])
 
     try:
         if state == "absent":
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.delete("unity-catalog/schemas/{0}".format(full_name),
-                          api_version="2.1")
+            client.delete(
+                "unity-catalog/schemas/{0}".format(full_name), api_version="2.1"
+            )
             module.exit_json(changed=True)
 
         existing = None
         try:
             existing = client.get(
-                "unity-catalog/schemas/{0}".format(full_name),
-                api_version="2.1")
+                "unity-catalog/schemas/{0}".format(full_name), api_version="2.1"
+            )
         except DatabricksError as e:
             if e.status_code != 404:
                 raise
@@ -114,13 +115,14 @@ def main():
                 module.exit_json(changed=True, schema=existing)
             updated = client.patch(
                 "unity-catalog/schemas/{0}".format(full_name),
-                data=payload, api_version="2.1")
+                data=payload,
+                api_version="2.1",
+            )
             module.exit_json(changed=True, schema=updated)
 
         if module.check_mode:
             module.exit_json(changed=True)
-        created = client.post("unity-catalog/schemas",
-                              data=payload, api_version="2.1")
+        created = client.post("unity-catalog/schemas", data=payload, api_version="2.1")
         module.exit_json(changed=True, schema=created)
 
     except DatabricksError as e:

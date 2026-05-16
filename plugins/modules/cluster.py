@@ -4,6 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
@@ -99,8 +100,11 @@ def find_cluster_by_name(client, name):
 def main():
     argument_spec = databricks_argument_spec()
     argument_spec.update(
-        state=dict(type="str", default="present",
-                   choices=["present", "absent", "started", "terminated"]),
+        state=dict(
+            type="str",
+            default="present",
+            choices=["present", "absent", "started", "terminated"],
+        ),
         cluster_id=dict(type="str"),
         cluster_name=dict(type="str"),
         spark_version=dict(type="str"),
@@ -155,10 +159,17 @@ def main():
 
         # state == present
         payload = {}
-        for key in ("cluster_name", "spark_version", "node_type_id",
-                     "num_workers", "autoscale", "spark_conf",
-                     "autotermination_minutes", "custom_tags",
-                     "cluster_policy_id"):
+        for key in (
+            "cluster_name",
+            "spark_version",
+            "node_type_id",
+            "num_workers",
+            "autoscale",
+            "spark_conf",
+            "autotermination_minutes",
+            "custom_tags",
+            "cluster_policy_id",
+        ):
             val = module.params.get(key)
             if val is not None:
                 payload[key] = val
@@ -174,15 +185,15 @@ def main():
             if module.check_mode:
                 module.exit_json(changed=True, cluster=existing)
             client.post("clusters/edit", data=payload)
-            info = client.get("clusters/get",
-                              params={"cluster_id": existing["cluster_id"]})
+            info = client.get(
+                "clusters/get", params={"cluster_id": existing["cluster_id"]}
+            )
             module.exit_json(changed=True, cluster=info)
 
         if module.check_mode:
             module.exit_json(changed=True)
         resp = client.post("clusters/create", data=payload)
-        info = client.get("clusters/get",
-                          params={"cluster_id": resp["cluster_id"]})
+        info = client.get("clusters/get", params={"cluster_id": resp["cluster_id"]})
         module.exit_json(changed=True, cluster=info)
 
     except DatabricksError as e:

@@ -4,6 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
@@ -62,9 +63,11 @@ def main():
         params = {}
         if module.params.get("name"):
             params["name"] = module.params["name"]
-        jobs = list(client.list_paginated(
-            "jobs/list", params=params, results_key="jobs",
-            api_version="2.1"))
+        jobs = list(
+            client.list_paginated(
+                "jobs/list", params=params, results_key="jobs", api_version="2.1"
+            )
+        )
         module.exit_json(changed=False, jobs=jobs)
     except DatabricksError as e:
         module.fail_json(msg=str(e))

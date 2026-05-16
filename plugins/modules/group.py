@@ -4,6 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
@@ -59,9 +60,12 @@ from ansible_collections.stevefulme1.databricks.plugins.module_utils.databricks_
 
 def find_group_by_name(client, name):
     """Find a group by displayName via SCIM filter."""
-    resp = client.get("preview/scim/v2/Groups", params={
-        "filter": 'displayName eq "{0}"'.format(name),
-    })
+    resp = client.get(
+        "preview/scim/v2/Groups",
+        params={
+            "filter": 'displayName eq "{0}"'.format(name),
+        },
+    )
     resources = resp.get("Resources", [])
     return resources[0] if resources else None
 
@@ -111,8 +115,8 @@ def main():
             if module.check_mode:
                 module.exit_json(changed=True, group=existing)
             updated = client.put(
-                "preview/scim/v2/Groups/{0}".format(existing["id"]),
-                data=payload)
+                "preview/scim/v2/Groups/{0}".format(existing["id"]), data=payload
+            )
             module.exit_json(changed=True, group=updated)
 
         if module.check_mode:

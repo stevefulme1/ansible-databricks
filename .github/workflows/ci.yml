@@ -59,9 +59,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
-      - run: pip install ansible-core>=2.16 pytest
-      - run: ansible-test units --python ${{ matrix.python }} -v --color yes
+      - run: pip install ansible-core>=2.16 pytest pytest-cov
+      - name: Run unit tests
         working-directory: ansible_collections/stevefulme1/databricks
+        run: python -m pytest tests/unit/ -v --tb=short
+        env:
+          PYTHONPATH: ${{ github.workspace }}
 
   integration:
     runs-on: ubuntu-latest

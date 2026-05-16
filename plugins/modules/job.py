@@ -4,6 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
@@ -101,8 +102,7 @@ def main():
         if state == "absent":
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.post("jobs/delete", data={"job_id": job_id},
-                        api_version="2.1")
+            client.post("jobs/delete", data={"job_id": job_id}, api_version="2.1")
             module.exit_json(changed=True)
 
         settings = {}
@@ -114,18 +114,20 @@ def main():
         if job_id:
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.post("jobs/reset",
-                        data={"job_id": job_id, "new_settings": settings},
-                        api_version="2.1")
-            info = client.get("jobs/get", params={"job_id": job_id},
-                              api_version="2.1")
+            client.post(
+                "jobs/reset",
+                data={"job_id": job_id, "new_settings": settings},
+                api_version="2.1",
+            )
+            info = client.get("jobs/get", params={"job_id": job_id}, api_version="2.1")
             module.exit_json(changed=True, job=info)
 
         if module.check_mode:
             module.exit_json(changed=True)
         resp = client.post("jobs/create", data=settings, api_version="2.1")
-        info = client.get("jobs/get", params={"job_id": resp["job_id"]},
-                          api_version="2.1")
+        info = client.get(
+            "jobs/get", params={"job_id": resp["job_id"]}, api_version="2.1"
+        )
         module.exit_json(changed=True, job=info)
 
     except DatabricksError as e:

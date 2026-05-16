@@ -4,6 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
@@ -63,8 +64,7 @@ def main():
         if module.params.get("filter"):
             params["filter"] = module.params["filter"]
         resp = client.get("preview/scim/v2/ServicePrincipals", params=params)
-        module.exit_json(changed=False,
-                         service_principals=resp.get("Resources", []))
+        module.exit_json(changed=False, service_principals=resp.get("Resources", []))
     except DatabricksError as e:
         module.fail_json(msg=str(e))
 

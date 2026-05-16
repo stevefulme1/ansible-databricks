@@ -3,6 +3,7 @@
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 from unittest.mock import MagicMock
@@ -38,15 +39,21 @@ class TestDatabricksClient:
     """Basic DatabricksClient construction tests."""
 
     def test_init_stores_host(self):
-        client = DatabricksClient(host="https://example.cloud.databricks.com", token="tok")
+        client = DatabricksClient(
+            host="https://example.cloud.databricks.com", token="tok"
+        )
         assert client.host == "https://example.cloud.databricks.com"
 
     def test_init_strips_trailing_slash(self):
-        client = DatabricksClient(host="https://example.cloud.databricks.com/", token="tok")
+        client = DatabricksClient(
+            host="https://example.cloud.databricks.com/", token="tok"
+        )
         assert not client.host.endswith("/")
 
     def test_init_stores_token(self):
-        client = DatabricksClient(host="https://example.cloud.databricks.com", token="dapi-xyz")
+        client = DatabricksClient(
+            host="https://example.cloud.databricks.com", token="dapi-xyz"
+        )
         assert client.token == "dapi-xyz"
 
     def test_init_with_mock_module(self):

@@ -4,6 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
@@ -88,19 +89,25 @@ def main():
         if state == "absent":
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.post("secrets/acls/delete", data={
-                "scope": module.params["scope"],
-                "principal": module.params["principal"],
-            })
+            client.post(
+                "secrets/acls/delete",
+                data={
+                    "scope": module.params["scope"],
+                    "principal": module.params["principal"],
+                },
+            )
             module.exit_json(changed=True, msg="ACL deleted")
 
         if module.check_mode:
             module.exit_json(changed=True)
-        client.post("secrets/acls/put", data={
-            "scope": module.params["scope"],
-            "principal": module.params["principal"],
-            "permission": module.params["permission"],
-        })
+        client.post(
+            "secrets/acls/put",
+            data={
+                "scope": module.params["scope"],
+                "principal": module.params["principal"],
+                "permission": module.params["permission"],
+            },
+        )
         module.exit_json(changed=True, msg="ACL set")
 
     except DatabricksError as e:

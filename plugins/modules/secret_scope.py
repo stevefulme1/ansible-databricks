@@ -4,6 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
@@ -98,10 +99,13 @@ def main():
 
         if module.check_mode:
             module.exit_json(changed=True)
-        client.post("secrets/scopes/create", data={
-            "scope": scope_name,
-            "initial_manage_principal": module.params["initial_manage_principal"],
-        })
+        client.post(
+            "secrets/scopes/create",
+            data={
+                "scope": scope_name,
+                "initial_manage_principal": module.params["initial_manage_principal"],
+            },
+        )
         module.exit_json(changed=True, msg="Scope created")
 
     except DatabricksError as e:

@@ -4,6 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
@@ -62,9 +63,12 @@ from ansible_collections.stevefulme1.databricks.plugins.module_utils.databricks_
 
 def find_user_by_name(client, user_name):
     """Find a user by userName via SCIM filter."""
-    resp = client.get("preview/scim/v2/Users", params={
-        "filter": 'userName eq "{0}"'.format(user_name),
-    })
+    resp = client.get(
+        "preview/scim/v2/Users",
+        params={
+            "filter": 'userName eq "{0}"'.format(user_name),
+        },
+    )
     resources = resp.get("Resources", [])
     return resources[0] if resources else None
 
@@ -117,8 +121,8 @@ def main():
             if module.check_mode:
                 module.exit_json(changed=True, user=existing)
             updated = client.put(
-                "preview/scim/v2/Users/{0}".format(existing["id"]),
-                data=payload)
+                "preview/scim/v2/Users/{0}".format(existing["id"]), data=payload
+            )
             module.exit_json(changed=True, user=updated)
 
         if module.check_mode:

@@ -4,6 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
@@ -42,8 +43,9 @@ from ansible_collections.stevefulme1.databricks.plugins.module_utils.databricks_
 
 
 def main():
-    module = AnsibleModule(argument_spec=databricks_argument_spec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(
+        argument_spec=databricks_argument_spec(), supports_check_mode=True
+    )
     client = DatabricksClient(
         host=module.params["host"],
         token=module.params["token"],
@@ -52,8 +54,7 @@ def main():
 
     try:
         resp = client.get("ip-access-lists")
-        module.exit_json(changed=False,
-                         ip_access_lists=resp.get("ip_access_lists", []))
+        module.exit_json(changed=False, ip_access_lists=resp.get("ip_access_lists", []))
     except DatabricksError as e:
         module.fail_json(msg=str(e))
 

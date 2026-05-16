@@ -4,6 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
@@ -75,14 +76,18 @@ def main():
     )
 
     path = "permissions/{0}/{1}".format(
-        module.params["object_type"], module.params["object_id"])
+        module.params["object_type"], module.params["object_id"]
+    )
 
     try:
         if module.check_mode:
             module.exit_json(changed=True)
-        resp = client.patch(path, data={
-            "access_control_list": module.params["access_control_list"],
-        })
+        resp = client.patch(
+            path,
+            data={
+                "access_control_list": module.params["access_control_list"],
+            },
+        )
         module.exit_json(changed=True, permissions=resp)
     except DatabricksError as e:
         module.fail_json(msg=str(e))

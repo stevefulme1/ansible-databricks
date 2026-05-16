@@ -4,6 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
@@ -60,9 +61,9 @@ def main():
     )
 
     try:
-        info = client.get("jobs/get",
-                          params={"job_id": module.params["job_id"]},
-                          api_version="2.1")
+        info = client.get(
+            "jobs/get", params={"job_id": module.params["job_id"]}, api_version="2.1"
+        )
         module.exit_json(changed=False, job=info)
     except DatabricksError as e:
         module.fail_json(msg=str(e))

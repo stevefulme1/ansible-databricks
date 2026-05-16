@@ -4,6 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
@@ -88,11 +89,11 @@ def main():
         if state == "absent":
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.post("policies/clusters/delete",
-                        data={"policy_id": policy_id})
+            client.post("policies/clusters/delete", data={"policy_id": policy_id})
             module.exit_json(changed=True)
 
         import json as _json
+
         payload = {}
         if module.params.get("name"):
             payload["name"] = module.params["name"]
@@ -104,15 +105,15 @@ def main():
             if module.check_mode:
                 module.exit_json(changed=True)
             client.post("policies/clusters/edit", data=payload)
-            resp = client.get("policies/clusters/get",
-                              params={"policy_id": policy_id})
+            resp = client.get("policies/clusters/get", params={"policy_id": policy_id})
             module.exit_json(changed=True, policy=resp)
 
         if module.check_mode:
             module.exit_json(changed=True)
         resp = client.post("policies/clusters/create", data=payload)
-        policy = client.get("policies/clusters/get",
-                            params={"policy_id": resp["policy_id"]})
+        policy = client.get(
+            "policies/clusters/get", params={"policy_id": resp["policy_id"]}
+        )
         module.exit_json(changed=True, policy=policy)
 
     except DatabricksError as e:

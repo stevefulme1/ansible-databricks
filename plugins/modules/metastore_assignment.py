@@ -4,6 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
@@ -84,7 +85,8 @@ def main():
                 module.exit_json(changed=True)
             client.delete(
                 "unity-catalog/workspaces/{0}/metastore".format(workspace_id),
-                api_version="2.1")
+                api_version="2.1",
+            )
             module.exit_json(changed=True)
 
         payload = {"metastore_id": module.params["metastore_id"]}
@@ -95,7 +97,9 @@ def main():
             module.exit_json(changed=True)
         resp = client.put(
             "unity-catalog/workspaces/{0}/metastore".format(workspace_id),
-            data=payload, api_version="2.1")
+            data=payload,
+            api_version="2.1",
+        )
         module.exit_json(changed=True, assignment=resp)
 
     except DatabricksError as e:

@@ -5,6 +5,7 @@
 """Databricks REST API client and shared argument spec."""
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 import json
@@ -105,9 +106,15 @@ class DatabricksClient(object):
         """HTTP DELETE."""
         return self._request("DELETE", self._url(path, api_version), data=data)
 
-    def list_paginated(self, path, params=None, api_version="2.0",
-                       results_key=None, token_key="next_page_token",
-                       token_param="page_token"):
+    def list_paginated(
+        self,
+        path,
+        params=None,
+        api_version="2.0",
+        results_key=None,
+        token_key="next_page_token",
+        token_param="page_token",
+    ):
         """Auto-paginate a list endpoint that uses page tokens.
 
         *results_key* is the JSON key containing the list of items.  When

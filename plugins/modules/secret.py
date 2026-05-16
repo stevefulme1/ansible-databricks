@@ -4,6 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
@@ -87,19 +88,25 @@ def main():
         if state == "absent":
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.post("secrets/delete", data={
-                "scope": module.params["scope"],
-                "key": module.params["key"],
-            })
+            client.post(
+                "secrets/delete",
+                data={
+                    "scope": module.params["scope"],
+                    "key": module.params["key"],
+                },
+            )
             module.exit_json(changed=True, msg="Secret deleted")
 
         if module.check_mode:
             module.exit_json(changed=True)
-        client.post("secrets/put", data={
-            "scope": module.params["scope"],
-            "key": module.params["key"],
-            "string_value": module.params["string_value"],
-        })
+        client.post(
+            "secrets/put",
+            data={
+                "scope": module.params["scope"],
+                "key": module.params["key"],
+                "string_value": module.params["string_value"],
+            },
+        )
         module.exit_json(changed=True, msg="Secret set")
 
     except DatabricksError as e:

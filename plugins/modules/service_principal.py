@@ -4,6 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
@@ -103,8 +104,8 @@ def main():
             if module.check_mode:
                 module.exit_json(changed=True)
             updated = client.put(
-                "preview/scim/v2/ServicePrincipals/{0}".format(sp_id),
-                data=payload)
+                "preview/scim/v2/ServicePrincipals/{0}".format(sp_id), data=payload
+            )
             module.exit_json(changed=True, service_principal=updated)
 
         if module.check_mode:

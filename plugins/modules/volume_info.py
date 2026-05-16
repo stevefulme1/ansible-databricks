@@ -4,6 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
@@ -67,10 +68,14 @@ def main():
     )
 
     try:
-        resp = client.get("unity-catalog/volumes", params={
-            "catalog_name": module.params["catalog_name"],
-            "schema_name": module.params["schema_name"],
-        }, api_version="2.1")
+        resp = client.get(
+            "unity-catalog/volumes",
+            params={
+                "catalog_name": module.params["catalog_name"],
+                "schema_name": module.params["schema_name"],
+            },
+            api_version="2.1",
+        )
         module.exit_json(changed=False, volumes=resp.get("volumes", []))
     except DatabricksError as e:
         module.fail_json(msg=str(e))

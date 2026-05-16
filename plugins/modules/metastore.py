@@ -4,6 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
@@ -89,8 +90,9 @@ def main():
         if state == "absent":
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.delete("unity-catalog/metastores/{0}".format(metastore_id),
-                          api_version="2.1")
+            client.delete(
+                "unity-catalog/metastores/{0}".format(metastore_id), api_version="2.1"
+            )
             module.exit_json(changed=True)
 
         payload = {}
@@ -104,13 +106,16 @@ def main():
                 module.exit_json(changed=True)
             updated = client.patch(
                 "unity-catalog/metastores/{0}".format(metastore_id),
-                data=payload, api_version="2.1")
+                data=payload,
+                api_version="2.1",
+            )
             module.exit_json(changed=True, metastore=updated)
 
         if module.check_mode:
             module.exit_json(changed=True)
-        created = client.post("unity-catalog/metastores",
-                              data=payload, api_version="2.1")
+        created = client.post(
+            "unity-catalog/metastores", data=payload, api_version="2.1"
+        )
         module.exit_json(changed=True, metastore=created)
 
     except DatabricksError as e:

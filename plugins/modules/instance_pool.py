@@ -4,6 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
@@ -99,14 +100,17 @@ def main():
         if state == "absent":
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.post("instance-pools/delete",
-                        data={"instance_pool_id": pool_id})
+            client.post("instance-pools/delete", data={"instance_pool_id": pool_id})
             module.exit_json(changed=True)
 
         payload = {}
-        for key in ("instance_pool_name", "node_type_id",
-                     "min_idle_instances", "max_capacity",
-                     "idle_instance_autotermination_minutes"):
+        for key in (
+            "instance_pool_name",
+            "node_type_id",
+            "min_idle_instances",
+            "max_capacity",
+            "idle_instance_autotermination_minutes",
+        ):
             val = module.params.get(key)
             if val is not None:
                 payload[key] = val
@@ -116,15 +120,17 @@ def main():
             if module.check_mode:
                 module.exit_json(changed=True)
             client.post("instance-pools/edit", data=payload)
-            info = client.get("instance-pools/get",
-                              params={"instance_pool_id": pool_id})
+            info = client.get(
+                "instance-pools/get", params={"instance_pool_id": pool_id}
+            )
             module.exit_json(changed=True, instance_pool=info)
 
         if module.check_mode:
             module.exit_json(changed=True)
         resp = client.post("instance-pools/create", data=payload)
-        info = client.get("instance-pools/get",
-                          params={"instance_pool_id": resp["instance_pool_id"]})
+        info = client.get(
+            "instance-pools/get", params={"instance_pool_id": resp["instance_pool_id"]}
+        )
         module.exit_json(changed=True, instance_pool=info)
 
     except DatabricksError as e:
