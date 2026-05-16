@@ -125,9 +125,7 @@ class DatabricksClient(object):
         while True:
             resp = self.get(path, params=params, api_version=api_version)
             if results_key:
-                items = resp.get(results_key, [])
-                for item in items:
-                    yield item
+                yield from resp.get(results_key, [])
             else:
                 yield resp
 
