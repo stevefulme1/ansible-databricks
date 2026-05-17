@@ -1,0 +1,79 @@
+---
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - cluster_name is defined and cluster_name | length > 0
+    fail_msg: "Required variable: cluster_name"
+
+- name: Provision Databricks cluster
+  block:
+    - name: Create or update cluster
+      databricks.databricks.cluster:
+        cluster_name: "{{ cluster_name }}"
+        spark_version: "{{ cluster_spark_version | default(omit) }}"
+        node_type_id: "{{ cluster_node_type }}"
+        driver_node_type_id: "{{ cluster_driver_node_type | default(cluster_node_type) }}"
+        autoscale: >-
+          {{ {'min_workers': cluster_autoscale_min, 'max_workers': cluster_autoscale_max}
+             if cluster_autoscale_enabled else omit }}
+        num_workers: "{{ omit if cluster_autoscale_enabled else cluster_num_workers }}"
+        autotermination_minutes: "{{ cluster_auto_terminate_minutes }}"
+        spark_conf: "{{ cluster_spark_conf }}"
+        spark_env_vars: "{{ cluster_spark_env_vars }}"
+        custom_tags: "{{ cluster_custom_tags }}"
+        policy_id: "{{ cluster_policy_id | default(omit) }}"
+        init_scripts: "{{ cluster_init_scripts | default(omit) }}"
+        host: "{{ db_host }}"
+        token: "{{ db_token }}"
+        state: "{{ cluster_state }}"
+      register: _cluster
+
+    - name: Pin cluster to workspace
+      databricks.databricks.cluster:
+        cluster_id: "{{ _cluster.cluster_id }}"
+        pin: true
+        host: "{{ db_host }}"
+        token: "{{ db_token }}"
+        state: present
+      when:
+        - cluster_pin
+        - _cluster.cluster_id is defined
+
+    - name: Install libraries
+      databricks.databricks.cluster_library:
+        cluster_id: "{{ _cluster.cluster_id }}"
+        libraries: "{{ cluster_libraries }}"
+        host: "{{ db_host }}"
+        token: "{{ db_token }}"
+        state: present
+      when:
+        - cluster_libraries | length > 0
+        - _cluster.cluster_id is defined
+
+    - name: Set cluster permissions
+      databricks.databricks.permissions:
+        object_type: "clusters"
+        object_id: "{{ _cluster.cluster_id }}"
+        access_control_list:
+          - user_name: "{{ item.user_name | default(omit) }}"
+            group_name: "{{ item.group_name | default(omit) }}"
+            permission_level: "{{ item.permission_level }}"
+        host: "{{ db_host }}"
+        token: "{{ db_token }}"
+      loop: "{{ cluster_permissions }}"
+      loop_control:
+        label: "{{ item.user_name | default(item.group_name) }}"
+      when:
+        - cluster_permissions | length > 0
+        - _cluster.cluster_id is defined
+
+    - name: Display cluster details
+      ansible.builtin.debug:
+        msg: "Cluster '{{ cluster_name }}' ({{ _cluster.cluster_id | default('N/A') }}) configured"
+
+  rescue:
+    - name: Report cluster provisioning failure
+      ansible.builtin.fail:
+        msg: >-
+          Cluster provisioning failed for '{{ cluster_name }}'.
+          Error: {{ ansible_failed_result.msg | default('Unknown error') }}

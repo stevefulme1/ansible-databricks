@@ -1,0 +1,41 @@
+---
+# Databricks connection
+db_host: "{{ lookup('env', 'DATABRICKS_HOST') }}"
+db_token: "{{ lookup('env', 'DATABRICKS_TOKEN') }}"
+
+# Unity Catalog
+ws_metastore_name: ""
+ws_catalog_name: ""
+ws_catalog_comment: "Managed by Ansible"
+
+# Schemas under catalog
+ws_schemas: []
+#   - name: "bronze"
+#     comment: "Raw ingested data"
+#   - name: "silver"
+#     comment: "Cleansed and conformed data"
+#   - name: "gold"
+#     comment: "Business-level aggregates"
+
+# External locations
+ws_external_locations: []
+#   - name: "raw-data"
+#     url: "s3://raw-data-bucket/"
+#     credential_name: "aws-cred"
+
+# Workspace directories
+ws_directories: []
+#   - "/Repos/production"
+#   - "/Repos/development"
+
+# Secrets
+ws_secret_scopes: []
+#   - name: "data-secrets"
+#     secrets:
+#       - key: "storage-key"
+#         value: "{{ vault_storage_key }}"
+
+# Workspace settings
+ws_enable_table_access_control: true
+ws_enable_cluster_access_control: true
+ws_state: present

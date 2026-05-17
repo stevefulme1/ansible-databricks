@@ -1,0 +1,52 @@
+---
+# Required
+# cluster_name: ""
+
+# Databricks connection
+db_host: "{{ lookup('env', 'DATABRICKS_HOST') }}"
+db_token: "{{ lookup('env', 'DATABRICKS_TOKEN') }}"
+
+# Cluster settings
+cluster_spark_version: ""  # e.g., "13.3.x-scala2.12"
+cluster_node_type: "i3.xlarge"
+cluster_driver_node_type: ""  # defaults to cluster_node_type
+cluster_num_workers: 2
+cluster_autoscale_min: 1
+cluster_autoscale_max: 8
+cluster_autoscale_enabled: true
+cluster_auto_terminate_minutes: 30
+
+# Spark config
+cluster_spark_conf: {}
+#   "spark.databricks.delta.preview.enabled": "true"
+
+# Environment variables
+cluster_spark_env_vars: {}
+
+# Libraries
+cluster_libraries: []
+#   - pypi:
+#       package: "pandas==2.0.0"
+#   - maven:
+#       coordinates: "com.databricks:spark-xml_2.12:0.16.0"
+
+# Init scripts
+cluster_init_scripts: []
+#   - workspace:
+#       destination: "/Shared/init/install_drivers.sh"
+
+# Cluster policy
+cluster_policy_id: ""
+
+# Tags
+cluster_custom_tags: {}
+
+# Access control
+cluster_permissions: []
+#   - user_name: "user@example.com"
+#     permission_level: "CAN_MANAGE"
+#   - group_name: "data-engineers"
+#     permission_level: "CAN_RESTART"
+
+cluster_state: present
+cluster_pin: false
