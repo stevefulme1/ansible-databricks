@@ -9,7 +9,7 @@
 - name: Configure Databricks workspace
   block:
     - name: Create Unity Catalog
-      databricks.databricks.catalog:
+      stevefulme1.databricks.catalog:
         name: "{{ ws_catalog_name }}"
         comment: "{{ ws_catalog_comment }}"
         host: "{{ db_host }}"
@@ -19,7 +19,7 @@
       when: ws_catalog_name | length > 0
 
     - name: Create schemas in catalog
-      databricks.databricks.schema:
+      stevefulme1.databricks.schema:
         name: "{{ item.name }}"
         catalog_name: "{{ ws_catalog_name }}"
         comment: "{{ item.comment | default('') }}"
@@ -34,7 +34,7 @@
         - ws_schemas | length > 0
 
     - name: Create external locations
-      databricks.databricks.external_location:
+      stevefulme1.databricks.external_location:
         name: "{{ item.name }}"
         url: "{{ item.url }}"
         credential_name: "{{ item.credential_name }}"
@@ -47,7 +47,7 @@
       when: ws_external_locations | length > 0
 
     - name: Create workspace directories
-      databricks.databricks.workspace_directory:
+      stevefulme1.databricks.workspace_directory:
         path: "{{ item }}"
         host: "{{ db_host }}"
         token: "{{ db_token }}"
@@ -56,7 +56,7 @@
       when: ws_directories | length > 0
 
     - name: Create secret scopes
-      databricks.databricks.secret_scope:
+      stevefulme1.databricks.secret_scope:
         name: "{{ item.name }}"
         host: "{{ db_host }}"
         token: "{{ db_token }}"
@@ -67,7 +67,7 @@
       when: ws_secret_scopes | length > 0
 
     - name: Set secrets
-      databricks.databricks.secret:
+      stevefulme1.databricks.secret:
         scope: "{{ item.0.name }}"
         key: "{{ item.1.key }}"
         string_value: "{{ item.1.value }}"
@@ -80,7 +80,7 @@
       no_log: true
 
     - name: Configure workspace settings
-      databricks.databricks.workspace_config:
+      stevefulme1.databricks.workspace_config:
         enable_table_access_control: "{{ ws_enable_table_access_control }}"
         enable_cluster_access_control: "{{ ws_enable_cluster_access_control }}"
         host: "{{ db_host }}"

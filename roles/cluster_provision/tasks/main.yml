@@ -8,7 +8,7 @@
 - name: Provision Databricks cluster
   block:
     - name: Create or update cluster
-      databricks.databricks.cluster:
+      stevefulme1.databricks.cluster:
         cluster_name: "{{ cluster_name }}"
         spark_version: "{{ cluster_spark_version | default(omit) }}"
         node_type_id: "{{ cluster_node_type }}"
@@ -29,7 +29,7 @@
       register: _cluster
 
     - name: Pin cluster to workspace
-      databricks.databricks.cluster:
+      stevefulme1.databricks.cluster:
         cluster_id: "{{ _cluster.cluster_id }}"
         pin: true
         host: "{{ db_host }}"
@@ -40,7 +40,7 @@
         - _cluster.cluster_id is defined
 
     - name: Install libraries
-      databricks.databricks.cluster_library:
+      stevefulme1.databricks.cluster_library:
         cluster_id: "{{ _cluster.cluster_id }}"
         libraries: "{{ cluster_libraries }}"
         host: "{{ db_host }}"
@@ -51,7 +51,7 @@
         - _cluster.cluster_id is defined
 
     - name: Set cluster permissions
-      databricks.databricks.permissions:
+      stevefulme1.databricks.permissions:
         object_type: "clusters"
         object_id: "{{ _cluster.cluster_id }}"
         access_control_list:

@@ -3,6 +3,8 @@
 
 """Databricks event source plugin for Event-Driven Ansible.
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
 Polls Databricks audit logs and cluster events, emitting structured events
 for cluster lifecycle changes, job failures, and security alerts.
 """

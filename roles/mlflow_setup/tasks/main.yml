@@ -9,7 +9,7 @@
 - name: Configure MLflow
   block:
     - name: Create MLflow experiments
-      databricks.databricks.mlflow_experiment:
+      stevefulme1.databricks.mlflow_experiment:
         name: "{{ item.name }}"
         artifact_location: "{{ item.artifact_location | default(omit) }}"
         tags: "{{ item.tags | default({}) }}"
@@ -22,7 +22,7 @@
       when: mlflow_experiments | length > 0
 
     - name: Register models in Unity Catalog
-      databricks.databricks.mlflow_registered_model:
+      stevefulme1.databricks.mlflow_registered_model:
         name: "{{ item.name }}"
         description: "{{ item.description | default('') }}"
         tags: "{{ item.tags | default({}) }}"
@@ -35,7 +35,7 @@
       when: mlflow_registered_models | length > 0
 
     - name: Create model serving endpoints
-      databricks.databricks.serving_endpoint:
+      stevefulme1.databricks.serving_endpoint:
         name: "{{ item.name }}"
         config:
           served_models:
@@ -53,7 +53,7 @@
       when: mlflow_serving_endpoints | length > 0
 
     - name: Wait for serving endpoints to be ready
-      databricks.databricks.serving_endpoint_info:
+      stevefulme1.databricks.serving_endpoint_info:
         name: "{{ item.name }}"
         host: "{{ db_host }}"
         token: "{{ db_token }}"
@@ -70,7 +70,7 @@
         - mlflow_state == "present"
 
     - name: Configure webhooks
-      databricks.databricks.mlflow_webhook:
+      stevefulme1.databricks.mlflow_webhook:
         model_name: "{{ item.model_name }}"
         events: "{{ item.events }}"
         http_url_spec:
@@ -85,7 +85,7 @@
       when: mlflow_webhooks | length > 0
 
     - name: Set experiment permissions
-      databricks.databricks.permissions:
+      stevefulme1.databricks.permissions:
         object_type: "experiments"
         object_id: "{{ item.experiment_path }}"
         access_control_list:

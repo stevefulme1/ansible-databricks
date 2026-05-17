@@ -1,0 +1,4 @@
+---
+profile: shared
+warn_list:
+  - var-naming[no-role-prefix]
