@@ -3,6 +3,7 @@
 
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 from ansible_collections.stevefulme1.databricks.plugins.modules import user
 

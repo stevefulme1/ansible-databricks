@@ -1,6 +1,7 @@
 """Shared test fixtures for stevefulme1.databricks collection."""
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 import os
 import sys

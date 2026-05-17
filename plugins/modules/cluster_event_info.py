@@ -4,6 +4,7 @@
 
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 DOCUMENTATION = r"""
 ---
@@ -21,14 +22,13 @@ options:
   limit:
     description: Maximum number of events to return.
     type: int
-    default: 50
+    default: 100
+  offset:
+    description: Number of results to skip for pagination.
+    type: int
+    default: 0
 extends_documentation_fragment:
   - stevefulme1.databricks.databricks
-    offset:
-        description:
-            - Number of results to skip for pagination.
-        type: int
-        default: 0
 """
 
 EXAMPLES = r"""
