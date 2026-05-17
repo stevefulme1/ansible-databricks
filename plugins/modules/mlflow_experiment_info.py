@@ -24,6 +24,16 @@ options:
     type: str
 extends_documentation_fragment:
   - stevefulme1.databricks.databricks
+  limit:
+    description:
+      - Maximum number of results to return.
+    type: int
+    default: 100
+  offset:
+    description:
+      - Number of results to skip for pagination.
+    type: int
+    default: 0
 """
 
 EXAMPLES = r"""
@@ -54,6 +64,10 @@ def main():
     argument_spec.update(
         experiment_id=dict(type="str"),
         name=dict(type="str"),
+    )
+    argument_spec.update(
+        limit=dict(type='int', default=100),
+        offset=dict(type='int', default=0),
     )
 
     module = AnsibleModule(
