@@ -24,6 +24,11 @@ options:
     default: 50
 extends_documentation_fragment:
   - stevefulme1.databricks.databricks
+    offset:
+        description:
+            - Number of results to skip for pagination.
+        type: int
+        default: 0
 """
 
 EXAMPLES = r"""
