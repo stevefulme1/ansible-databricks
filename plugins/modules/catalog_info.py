@@ -17,6 +17,17 @@ version_added: "1.0.0"
 author: Steve Fulmer (@stevefulme1)
 extends_documentation_fragment:
   - stevefulme1.databricks.databricks
+options:
+  limit:
+    description:
+      - Maximum number of results to return.
+    type: int
+    default: 100
+  offset:
+    description:
+      - Number of results to skip for pagination.
+    type: int
+    default: 0
 """
 
 EXAMPLES = r"""
@@ -43,8 +54,13 @@ from ansible_collections.stevefulme1.databricks.plugins.module_utils.databricks_
 
 
 def main():
+    argument_spec = databricks_argument_spec()
+    argument_spec.update(
+        limit=dict(type='int', default=100),
+        offset=dict(type='int', default=0),
+    )
     module = AnsibleModule(
-        argument_spec=databricks_argument_spec(), supports_check_mode=True
+        argument_spec=argument_spec, supports_check_mode=True
     )
     client = DatabricksClient(
         host=module.params["host"],
