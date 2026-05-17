@@ -1,0 +1,94 @@
+---
+- name: Validate Databricks connection
+  ansible.builtin.assert:
+    that:
+      - db_host is defined and db_host | length > 0
+      - db_token is defined and db_token | length > 0
+    fail_msg: "Required: db_host and db_token (DATABRICKS_HOST, DATABRICKS_TOKEN)"
+
+- name: Configure Databricks workspace
+  block:
+    - name: Create Unity Catalog
+      databricks.databricks.catalog:
+        name: "{{ ws_catalog_name }}"
+        comment: "{{ ws_catalog_comment }}"
+        host: "{{ db_host }}"
+        token: "{{ db_token }}"
+        state: "{{ ws_state }}"
+      register: _catalog
+      when: ws_catalog_name | length > 0
+
+    - name: Create schemas in catalog
+      databricks.databricks.schema:
+        name: "{{ item.name }}"
+        catalog_name: "{{ ws_catalog_name }}"
+        comment: "{{ item.comment | default('') }}"
+        host: "{{ db_host }}"
+        token: "{{ db_token }}"
+        state: "{{ ws_state }}"
+      loop: "{{ ws_schemas }}"
+      loop_control:
+        label: "{{ ws_catalog_name }}.{{ item.name }}"
+      when:
+        - ws_catalog_name | length > 0
+        - ws_schemas | length > 0
+
+    - name: Create external locations
+      databricks.databricks.external_location:
+        name: "{{ item.name }}"
+        url: "{{ item.url }}"
+        credential_name: "{{ item.credential_name }}"
+        host: "{{ db_host }}"
+        token: "{{ db_token }}"
+        state: "{{ ws_state }}"
+      loop: "{{ ws_external_locations }}"
+      loop_control:
+        label: "{{ item.name }}"
+      when: ws_external_locations | length > 0
+
+    - name: Create workspace directories
+      databricks.databricks.workspace_directory:
+        path: "{{ item }}"
+        host: "{{ db_host }}"
+        token: "{{ db_token }}"
+        state: present
+      loop: "{{ ws_directories }}"
+      when: ws_directories | length > 0
+
+    - name: Create secret scopes
+      databricks.databricks.secret_scope:
+        name: "{{ item.name }}"
+        host: "{{ db_host }}"
+        token: "{{ db_token }}"
+        state: present
+      loop: "{{ ws_secret_scopes }}"
+      loop_control:
+        label: "{{ item.name }}"
+      when: ws_secret_scopes | length > 0
+
+    - name: Set secrets
+      databricks.databricks.secret:
+        scope: "{{ item.0.name }}"
+        key: "{{ item.1.key }}"
+        string_value: "{{ item.1.value }}"
+        host: "{{ db_host }}"
+        token: "{{ db_token }}"
+      loop: "{{ ws_secret_scopes | subelements('secrets', skip_missing=True) }}"
+      loop_control:
+        label: "{{ item.0.name }}/{{ item.1.key }}"
+      when: ws_secret_scopes | length > 0
+      no_log: true
+
+    - name: Configure workspace settings
+      databricks.databricks.workspace_config:
+        enable_table_access_control: "{{ ws_enable_table_access_control }}"
+        enable_cluster_access_control: "{{ ws_enable_cluster_access_control }}"
+        host: "{{ db_host }}"
+        token: "{{ db_token }}"
+
+  rescue:
+    - name: Report workspace setup failure
+      ansible.builtin.fail:
+        msg: >-
+          Workspace setup failed.
+          Error: {{ ansible_failed_result.msg | default('Unknown error') }}

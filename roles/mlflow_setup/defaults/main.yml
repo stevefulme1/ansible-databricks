@@ -1,0 +1,45 @@
+---
+# Databricks connection
+db_host: "{{ lookup('env', 'DATABRICKS_HOST') }}"
+db_token: "{{ lookup('env', 'DATABRICKS_TOKEN') }}"
+
+# MLflow experiments
+mlflow_experiments: []
+#   - name: "/Shared/experiments/model-training"
+#     artifact_location: "dbfs:/mlflow/artifacts"
+#     tags:
+#       team: "ml-engineering"
+#       project: "recommendation"
+
+# Model registry - registered models
+mlflow_registered_models: []
+#   - name: "recommendation-model"
+#     description: "Product recommendation model"
+#     tags:
+#       team: "ml-engineering"
+
+# Model serving endpoints
+mlflow_serving_endpoints: []
+#   - name: "recommendation-endpoint"
+#     model_name: "recommendation-model"
+#     model_version: "1"
+#     workload_size: "Small"
+#     scale_to_zero: true
+#     compute_type: "CPU"  # CPU or GPU
+
+# Webhooks for model events
+mlflow_webhooks: []
+#   - model_name: "recommendation-model"
+#     events:
+#       - "MODEL_VERSION_CREATED"
+#       - "TRANSITION_REQUEST_CREATED"
+#     url: "https://hooks.example.com/mlflow"
+#     description: "Notify on model events"
+
+# Permissions
+mlflow_experiment_permissions: []
+#   - experiment_path: "/Shared/experiments/model-training"
+#     user_name: "ml-team@example.com"
+#     permission_level: "CAN_MANAGE"
+
+mlflow_state: present

@@ -1,0 +1,107 @@
+---
+- name: Validate Databricks connection
+  ansible.builtin.assert:
+    that:
+      - db_host is defined and db_host | length > 0
+      - db_token is defined and db_token | length > 0
+    fail_msg: "Required: db_host and db_token"
+
+- name: Configure MLflow
+  block:
+    - name: Create MLflow experiments
+      databricks.databricks.mlflow_experiment:
+        name: "{{ item.name }}"
+        artifact_location: "{{ item.artifact_location | default(omit) }}"
+        tags: "{{ item.tags | default({}) }}"
+        host: "{{ db_host }}"
+        token: "{{ db_token }}"
+        state: "{{ mlflow_state }}"
+      loop: "{{ mlflow_experiments }}"
+      loop_control:
+        label: "{{ item.name }}"
+      when: mlflow_experiments | length > 0
+
+    - name: Register models in Unity Catalog
+      databricks.databricks.mlflow_registered_model:
+        name: "{{ item.name }}"
+        description: "{{ item.description | default('') }}"
+        tags: "{{ item.tags | default({}) }}"
+        host: "{{ db_host }}"
+        token: "{{ db_token }}"
+        state: "{{ mlflow_state }}"
+      loop: "{{ mlflow_registered_models }}"
+      loop_control:
+        label: "{{ item.name }}"
+      when: mlflow_registered_models | length > 0
+
+    - name: Create model serving endpoints
+      databricks.databricks.serving_endpoint:
+        name: "{{ item.name }}"
+        config:
+          served_models:
+            - model_name: "{{ item.model_name }}"
+              model_version: "{{ item.model_version }}"
+              workload_size: "{{ item.workload_size | default('Small') }}"
+              scale_to_zero_enabled: "{{ item.scale_to_zero | default(true) }}"
+              workload_type: "{{ item.compute_type | default('CPU') }}"
+        host: "{{ db_host }}"
+        token: "{{ db_token }}"
+        state: "{{ mlflow_state }}"
+      loop: "{{ mlflow_serving_endpoints }}"
+      loop_control:
+        label: "{{ item.name }}"
+      when: mlflow_serving_endpoints | length > 0
+
+    - name: Wait for serving endpoints to be ready
+      databricks.databricks.serving_endpoint_info:
+        name: "{{ item.name }}"
+        host: "{{ db_host }}"
+        token: "{{ db_token }}"
+      register: _endpoint_status
+      until:
+        - _endpoint_status.endpoint.state.ready == "READY"
+      retries: 60
+      delay: 10
+      loop: "{{ mlflow_serving_endpoints }}"
+      loop_control:
+        label: "{{ item.name }}"
+      when:
+        - mlflow_serving_endpoints | length > 0
+        - mlflow_state == "present"
+
+    - name: Configure webhooks
+      databricks.databricks.mlflow_webhook:
+        model_name: "{{ item.model_name }}"
+        events: "{{ item.events }}"
+        http_url_spec:
+          url: "{{ item.url }}"
+        description: "{{ item.description | default('') }}"
+        host: "{{ db_host }}"
+        token: "{{ db_token }}"
+        state: "{{ mlflow_state }}"
+      loop: "{{ mlflow_webhooks }}"
+      loop_control:
+        label: "{{ item.model_name }}"
+      when: mlflow_webhooks | length > 0
+
+    - name: Set experiment permissions
+      databricks.databricks.permissions:
+        object_type: "experiments"
+        object_id: "{{ item.experiment_path }}"
+        access_control_list:
+          - user_name: "{{ item.user_name | default(omit) }}"
+            group_name: "{{ item.group_name | default(omit) }}"
+            permission_level: "{{ item.permission_level }}"
+        host: "{{ db_host }}"
+        token: "{{ db_token }}"
+      loop: "{{ mlflow_experiment_permissions }}"
+      loop_control:
+        label: "{{ item.experiment_path }}"
+      when: mlflow_experiment_permissions | length > 0
+
+  rescue:
+    - name: Report MLflow setup failure
+      ansible.builtin.fail:
+        msg: >-
+          MLflow setup failed.
+          Error: {{ ansible_failed_result.msg | default('Unknown error') }}
