@@ -11,6 +11,7 @@ description:
   - List all storage credentials in the metastore.
 version_added: "1.0.0"
 author: Steve Fulmer (@stevefulme1)
+options:
   limit:
     description:
       - Maximum number of results to return.
@@ -21,9 +22,12 @@ author: Steve Fulmer (@stevefulme1)
       - Number of results to skip for pagination.
     type: int
     default: 0
+  validate_certs:
+    description: Validate SSL certificates.
+    type: bool
+    default: true
 extends_documentation_fragment:
   - stevefulme1.databricks.databricks
-options:
 """
 
 EXAMPLES = r"""

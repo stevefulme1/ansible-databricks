@@ -11,6 +11,7 @@ description:
   - Retrieve all cluster policies in the workspace.
 version_added: "1.0.0"
 author: Steve Fulmer (@stevefulme1)
+options:
   limit:
     description:
       - Maximum number of results to return.
@@ -23,7 +24,6 @@ author: Steve Fulmer (@stevefulme1)
     default: 0
 extends_documentation_fragment:
   - stevefulme1.databricks.databricks
-options:
 """
 
 EXAMPLES = r"""

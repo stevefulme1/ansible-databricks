@@ -64,7 +64,7 @@ def main():
     argument_spec.update(
         query_id=dict(type="str"),
         page_size=dict(type="int", default=25),
-        page_token=dict(type="str"),
+        page_token=dict(type="str", no_log=True),
     )
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=True)
