@@ -1,5 +1,6 @@
 ---
 profile: shared
+exclude_paths:
+  - roles/
 warn_list:
   - var-naming[no-role-prefix]
-  - syntax-check[unknown-module]
