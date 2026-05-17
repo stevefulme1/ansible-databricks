@@ -1,13 +1,8 @@
 """Unit tests for stevefulme1.databricks.secret module."""
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
-
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
-
 
 MODULE_PATH = "ansible_collections.stevefulme1.databricks.plugins.modules.secret"
 CLIENT_PATH = "ansible_collections.stevefulme1.databricks.plugins.module_utils.databricks_client"
@@ -18,8 +13,8 @@ def mock_api_client():
     """Mock API client for secret."""
     client = MagicMock()
     client.get.return_value = None
-    client.create.return_value = {"key": "res-123", "key": "test-secret"}
-    client.update.return_value = {"key": "res-123", "key": "test-secret-updated"}
+    client.create.return_value = {"id": "res-123", "key": "test-secret"}
+    client.update.return_value = {"id": "res-123", "key": "test-secret-updated"}
     client.delete.return_value = None
     client.list.return_value = []
     return client
@@ -29,7 +24,7 @@ def mock_api_client():
 def existing_resource():
     """Return a dict representing an existing secret."""
     return {
-        "key": "res-123",
+        "id": "res-123",
         "key": "test-secret",
         "state": "active",
     }
@@ -41,7 +36,7 @@ class TestCreateSecret:
     def test_create_returns_resource(self, mock_api_client):
         """Verify create returns resource dict with expected fields."""
         result = mock_api_client.create("secret", {"key": "test-secret"})
-        assert result["key"] == "res-123"
+        assert result["id"] == "res-123"
         assert result["key"] == "test-secret"
         mock_api_client.create.assert_called_once()
 
@@ -143,7 +138,7 @@ class TestGetSecret:
         """Verify get returns resource when it exists."""
         mock_api_client.get.return_value = existing_resource
         result = mock_api_client.get("secret", "res-123")
-        assert result["key"] == "res-123"
+        assert result["id"] == "res-123"
 
     def test_get_nonexistent(self, mock_api_client):
         """Verify get returns None for missing resource."""
@@ -165,8 +160,8 @@ class TestListSecret:
     def test_list_returns_all(self, mock_api_client):
         """Verify list returns all resources."""
         mock_api_client.list.return_value = [
-            {"key": "1", "key": "first"},
-            {"key": "2", "key": "second"},
+            {"id": "1", "key": "first"},
+            {"id": "2", "key": "second"},
         ]
         result = mock_api_client.list("secret")
         assert len(result) == 2
@@ -178,7 +173,7 @@ class TestListSecret:
 
     def test_list_with_filter(self, mock_api_client):
         """Verify list applies filters."""
-        mock_api_client.list.return_value = [{"key": "1", "key": "match"}]
+        mock_api_client.list.return_value = [{"id": "1", "key": "match"}]
         result = mock_api_client.list("secret", filters={"key": "match"})
         assert len(result) == 1
 

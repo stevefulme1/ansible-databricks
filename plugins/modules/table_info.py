@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2024, Steve Fulmer (@stevefulme1)
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -79,8 +75,8 @@ def main():
         table_name=dict(type="str"),
     )
     argument_spec.update(
-        limit=dict(type='int', default=100),
-        offset=dict(type='int', default=0),
+        limit=dict(type="int", default=100),
+        offset=dict(type="int", default=0),
     )
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=True)
@@ -92,14 +88,12 @@ def main():
 
     try:
         if module.params.get("table_name"):
-            full_name = "{0}.{1}.{2}".format(
+            full_name = "{}.{}.{}".format(
                 module.params["catalog_name"],
                 module.params["schema_name"],
                 module.params["table_name"],
             )
-            table = client.get(
-                "unity-catalog/tables/{0}".format(full_name), api_version="2.1"
-            )
+            table = client.get(f"unity-catalog/tables/{full_name}", api_version="2.1")
             module.exit_json(changed=False, table=table)
 
         resp = client.get(

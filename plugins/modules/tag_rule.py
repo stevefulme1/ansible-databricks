@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2026, Steve Fulmer
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -98,7 +94,7 @@ def main():
             if module.check_mode:
                 module.exit_json(changed=True)
             client.delete(
-                "unity-catalog/metastores/{0}/tag-rules".format(metastore_id),
+                f"unity-catalog/metastores/{metastore_id}/tag-rules",
                 params=payload,
             )
             module.exit_json(changed=True)
@@ -106,7 +102,7 @@ def main():
         if module.check_mode:
             module.exit_json(changed=True)
         resp = client.post(
-            "unity-catalog/metastores/{0}/tag-rules".format(metastore_id),
+            f"unity-catalog/metastores/{metastore_id}/tag-rules",
             data=payload,
         )
         module.exit_json(changed=True, rule=resp)

@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2024, Steve Fulmer (@stevefulme1)
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -82,15 +78,13 @@ def main():
         if state == "absent":
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.delete("unity-catalog/catalogs/{0}".format(name), api_version="2.1")
+            client.delete(f"unity-catalog/catalogs/{name}", api_version="2.1")
             module.exit_json(changed=True)
 
         # Check existence
         existing = None
         try:
-            existing = client.get(
-                "unity-catalog/catalogs/{0}".format(name), api_version="2.1"
-            )
+            existing = client.get(f"unity-catalog/catalogs/{name}", api_version="2.1")
         except DatabricksError as e:
             if e.status_code != 404:
                 raise
@@ -105,7 +99,7 @@ def main():
             if module.check_mode:
                 module.exit_json(changed=True, catalog=existing)
             updated = client.patch(
-                "unity-catalog/catalogs/{0}".format(name),
+                f"unity-catalog/catalogs/{name}",
                 data=payload,
                 api_version="2.1",
             )

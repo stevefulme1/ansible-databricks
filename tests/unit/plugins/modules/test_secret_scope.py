@@ -1,13 +1,8 @@
 """Unit tests for stevefulme1.databricks.secret_scope module."""
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
-
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
-
 
 MODULE_PATH = "ansible_collections.stevefulme1.databricks.plugins.modules.secret_scope"
 CLIENT_PATH = "ansible_collections.stevefulme1.databricks.plugins.module_utils.databricks_client"
@@ -18,8 +13,8 @@ def mock_api_client():
     """Mock API client for secret_scope."""
     client = MagicMock()
     client.get.return_value = None
-    client.create.return_value = {"scope_name": "res-123", "scope_name": "test-secret_scope"}
-    client.update.return_value = {"scope_name": "res-123", "scope_name": "test-secret_scope-updated"}
+    client.create.return_value = {"id": "res-123", "scope_name": "test-secret_scope"}
+    client.update.return_value = {"id": "res-123", "scope_name": "test-secret_scope-updated"}
     client.delete.return_value = None
     client.list.return_value = []
     return client
@@ -29,7 +24,7 @@ def mock_api_client():
 def existing_resource():
     """Return a dict representing an existing secret_scope."""
     return {
-        "scope_name": "res-123",
+        "id": "res-123",
         "scope_name": "test-secret_scope",
         "state": "active",
     }
@@ -41,7 +36,7 @@ class TestCreateSecretScope:
     def test_create_returns_resource(self, mock_api_client):
         """Verify create returns resource dict with expected fields."""
         result = mock_api_client.create("secret_scope", {"scope_name": "test-secret_scope"})
-        assert result["scope_name"] == "res-123"
+        assert result["id"] == "res-123"
         assert result["scope_name"] == "test-secret_scope"
         mock_api_client.create.assert_called_once()
 
@@ -143,7 +138,7 @@ class TestGetSecretScope:
         """Verify get returns resource when it exists."""
         mock_api_client.get.return_value = existing_resource
         result = mock_api_client.get("secret_scope", "res-123")
-        assert result["scope_name"] == "res-123"
+        assert result["id"] == "res-123"
 
     def test_get_nonexistent(self, mock_api_client):
         """Verify get returns None for missing resource."""
@@ -165,8 +160,8 @@ class TestListSecretScope:
     def test_list_returns_all(self, mock_api_client):
         """Verify list returns all resources."""
         mock_api_client.list.return_value = [
-            {"scope_name": "1", "scope_name": "first"},
-            {"scope_name": "2", "scope_name": "second"},
+            {"id": "1", "scope_name": "first"},
+            {"id": "2", "scope_name": "second"},
         ]
         result = mock_api_client.list("secret_scope")
         assert len(result) == 2
@@ -178,7 +173,7 @@ class TestListSecretScope:
 
     def test_list_with_filter(self, mock_api_client):
         """Verify list applies filters."""
-        mock_api_client.list.return_value = [{"scope_name": "1", "scope_name": "match"}]
+        mock_api_client.list.return_value = [{"id": "1", "scope_name": "match"}]
         result = mock_api_client.list("secret_scope", filters={"scope_name": "match"})
         assert len(result) == 1
 

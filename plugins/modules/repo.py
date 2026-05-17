@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2026, Steve Fulmer
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -112,7 +108,7 @@ def main():
         if state == "absent":
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.delete("repos/{0}".format(repo_id))
+            client.delete(f"repos/{repo_id}")
             module.exit_json(changed=True)
 
         if repo_id:
@@ -123,8 +119,8 @@ def main():
                 payload["tag"] = module.params["tag"]
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.patch("repos/{0}".format(repo_id), data=payload)
-            info = client.get("repos/{0}".format(repo_id))
+            client.patch(f"repos/{repo_id}", data=payload)
+            info = client.get(f"repos/{repo_id}")
             module.exit_json(changed=True, repo=info)
 
         payload = {}

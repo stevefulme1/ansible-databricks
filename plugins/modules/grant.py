@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2024, Steve Fulmer (@stevefulme1)
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -88,17 +84,13 @@ def main():
 
     sec_type = module.params["securable_type"]
     sec_name = module.params["securable_name"]
-    path = "unity-catalog/permissions/{0}/{1}".format(sec_type, sec_name)
+    path = f"unity-catalog/permissions/{sec_type}/{sec_name}"
 
     changes = [
         {
             "principal": module.params["principal"],
-            "add": module.params["privileges"]
-            if module.params["state"] == "present"
-            else [],
-            "remove": module.params["privileges"]
-            if module.params["state"] == "absent"
-            else [],
+            "add": module.params["privileges"] if module.params["state"] == "present" else [],
+            "remove": module.params["privileges"] if module.params["state"] == "absent" else [],
         }
     ]
 

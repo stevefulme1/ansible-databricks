@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2024, Steve Fulmer (@stevefulme1)
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -115,9 +111,7 @@ def main():
         if state == "absent":
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.delete(
-                "sql/queries/{0}".format(query_id), api_version="2.0"
-            )
+            client.delete(f"sql/queries/{query_id}", api_version="2.0")
             module.exit_json(changed=True)
 
         payload = {}
@@ -129,7 +123,7 @@ def main():
             if module.check_mode:
                 module.exit_json(changed=True)
             updated = client.patch(
-                "sql/queries/{0}".format(query_id),
+                f"sql/queries/{query_id}",
                 data=payload,
                 api_version="2.0",
             )

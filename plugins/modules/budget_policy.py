@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2026, Steve Fulmer
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -89,7 +85,7 @@ def main():
         if state == "absent":
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.delete("budget-policies/{0}".format(policy_id))
+            client.delete(f"budget-policies/{policy_id}")
             module.exit_json(changed=True)
 
         payload = {}
@@ -101,8 +97,8 @@ def main():
         if policy_id:
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.patch("budget-policies/{0}".format(policy_id), data=payload)
-            info = client.get("budget-policies/{0}".format(policy_id))
+            client.patch(f"budget-policies/{policy_id}", data=payload)
+            info = client.get(f"budget-policies/{policy_id}")
             module.exit_json(changed=True, policy=info)
 
         if module.check_mode:

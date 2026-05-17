@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2026, Steve Fulmer
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -120,7 +116,7 @@ def main():
         if state == "absent":
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.delete("pipelines/{0}".format(pipeline_id))
+            client.delete(f"pipelines/{pipeline_id}")
             module.exit_json(changed=True)
 
         payload = {}
@@ -142,15 +138,15 @@ def main():
         if pipeline_id:
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.put("pipelines/{0}".format(pipeline_id), data=payload)
-            info = client.get("pipelines/{0}".format(pipeline_id))
+            client.put(f"pipelines/{pipeline_id}", data=payload)
+            info = client.get(f"pipelines/{pipeline_id}")
             module.exit_json(changed=True, pipeline=info)
 
         if module.check_mode:
             module.exit_json(changed=True)
         resp = client.post("pipelines", data=payload)
         pid = resp.get("pipeline_id", "")
-        info = client.get("pipelines/{0}".format(pid))
+        info = client.get(f"pipelines/{pid}")
         module.exit_json(changed=True, pipeline=info)
     except DatabricksError as e:
         module.fail_json(msg=str(e))

@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2026, Steve Fulmer
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -88,7 +84,7 @@ def main():
         if state == "absent":
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.delete("serving-endpoints/{0}".format(name))
+            client.delete(f"serving-endpoints/{name}")
             module.exit_json(changed=True)
 
         payload = {"name": name}
@@ -98,19 +94,15 @@ def main():
             payload["tags"] = module.params["tags"]
 
         try:
-            existing = client.get("serving-endpoints/{0}".format(name))
+            existing = client.get(f"serving-endpoints/{name}")
             if module.check_mode:
                 module.exit_json(changed=True, endpoint=existing)
             if module.params.get("config"):
                 client.put(
-                    "serving-endpoints/{0}/config".format(name),
-                    data={
-                        "served_models": module.params["config"].get(
-                            "served_models", []
-                        )
-                    },
+                    f"serving-endpoints/{name}/config",
+                    data={"served_models": module.params["config"].get("served_models", [])},
                 )
-            info = client.get("serving-endpoints/{0}".format(name))
+            info = client.get(f"serving-endpoints/{name}")
             module.exit_json(changed=True, endpoint=info)
         except DatabricksError:
             if module.check_mode:

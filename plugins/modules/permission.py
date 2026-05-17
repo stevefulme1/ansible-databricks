@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2024, Steve Fulmer (@stevefulme1)
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -75,9 +71,7 @@ def main():
         validate_certs=module.params["validate_certs"],
     )
 
-    path = "permissions/{0}/{1}".format(
-        module.params["object_type"], module.params["object_id"]
-    )
+    path = "permissions/{}/{}".format(module.params["object_type"], module.params["object_id"])
 
     try:
         if module.check_mode:

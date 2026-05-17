@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2026, Steve Fulmer
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -80,20 +76,12 @@ def main():
         if state == "absent":
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.delete(
-                "unity-catalog/metastores/{0}/systemschemas/{1}".format(
-                    metastore_id, schema_name
-                )
-            )
+            client.delete(f"unity-catalog/metastores/{metastore_id}/systemschemas/{schema_name}")
             module.exit_json(changed=True)
 
         if module.check_mode:
             module.exit_json(changed=True)
-        client.put(
-            "unity-catalog/metastores/{0}/systemschemas/{1}".format(
-                metastore_id, schema_name
-            )
-        )
+        client.put(f"unity-catalog/metastores/{metastore_id}/systemschemas/{schema_name}")
         module.exit_json(
             changed=True,
             schema={"metastore_id": metastore_id, "schema": schema_name},

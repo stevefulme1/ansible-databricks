@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2026, Steve Fulmer
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -137,7 +133,7 @@ def main():
         if state == "absent":
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.delete("sql/warehouses/{0}".format(warehouse_id))
+            client.delete(f"sql/warehouses/{warehouse_id}")
             module.exit_json(changed=True)
 
         payload = {}
@@ -158,7 +154,7 @@ def main():
 
         existing = None
         if warehouse_id:
-            existing = client.get("sql/warehouses/{0}".format(warehouse_id))
+            existing = client.get(f"sql/warehouses/{warehouse_id}")
         elif name:
             existing = find_warehouse_by_name(client, name)
 
@@ -166,14 +162,14 @@ def main():
             wid = existing["id"]
             if module.check_mode:
                 module.exit_json(changed=True, warehouse=existing)
-            client.post("sql/warehouses/{0}/edit".format(wid), data=payload)
-            info = client.get("sql/warehouses/{0}".format(wid))
+            client.post(f"sql/warehouses/{wid}/edit", data=payload)
+            info = client.get(f"sql/warehouses/{wid}")
             module.exit_json(changed=True, warehouse=info)
 
         if module.check_mode:
             module.exit_json(changed=True)
         resp = client.post("sql/warehouses", data=payload)
-        info = client.get("sql/warehouses/{0}".format(resp["id"]))
+        info = client.get("sql/warehouses/{}".format(resp["id"]))
         module.exit_json(changed=True, warehouse=info)
 
     except DatabricksError as e:

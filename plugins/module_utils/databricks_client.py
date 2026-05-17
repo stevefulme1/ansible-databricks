@@ -1,30 +1,25 @@
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2024, Steve Fulmer (@stevefulme1)
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 """Databricks REST API client and shared argument spec."""
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
-
 import json
 
-from ansible.module_utils.urls import open_url
 from ansible.module_utils.six.moves.urllib.error import HTTPError, URLError
 from ansible.module_utils.six.moves.urllib.parse import urlencode
+from ansible.module_utils.urls import open_url
 
 
 class DatabricksError(Exception):
     """Exception raised by Databricks API calls."""
 
     def __init__(self, message, status_code=None, error_code=None):
-        super(DatabricksError, self).__init__(message)
+        super().__init__(message)
         self.status_code = status_code
         self.error_code = error_code
 
 
-class DatabricksClient(object):
+class DatabricksClient:
     """REST client for the Databricks API."""
 
     def __init__(self, host, token, validate_certs=True, timeout=30):
@@ -40,20 +35,18 @@ class DatabricksClient(object):
     def _url(self, path, api_version="2.0"):
         """Build a full URL for *path* under the given API version."""
         path = path.lstrip("/")
-        return "{host}/api/{ver}/{path}".format(
-            host=self.host, ver=api_version, path=path
-        )
+        return f"{self.host}/api/{api_version}/{path}"
 
     def _headers(self):
         return {
-            "Authorization": "Bearer {0}".format(self.token),
+            "Authorization": f"Bearer {self.token}",
             "Content-Type": "application/json",
         }
 
     def _request(self, method, url, data=None, params=None):
         """Send an HTTP request and return the parsed JSON response."""
         if params:
-            url = "{0}?{1}".format(url, urlencode(params))
+            url = f"{url}?{urlencode(params)}"
 
         body = json.dumps(data) if data is not None else None
 
@@ -80,7 +73,7 @@ class DatabricksClient(object):
                 error_code = "UNKNOWN"
             raise DatabricksError(msg, status_code=e.code, error_code=error_code)
         except URLError as e:
-            raise DatabricksError("Connection error: {0}".format(str(e)))
+            raise DatabricksError(f"Connection error: {str(e)}")
 
     # ------------------------------------------------------------------
     # Public HTTP verbs

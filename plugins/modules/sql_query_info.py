@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2024, Steve Fulmer (@stevefulme1)
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -71,9 +67,7 @@ def main():
         page_token=dict(type="str"),
     )
 
-    module = AnsibleModule(
-        argument_spec=argument_spec, supports_check_mode=True
-    )
+    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=True)
     client = DatabricksClient(
         host=module.params["host"],
         token=module.params["token"],
@@ -83,7 +77,7 @@ def main():
     try:
         if module.params.get("query_id"):
             resp = client.get(
-                "sql/queries/{0}".format(module.params["query_id"]),
+                "sql/queries/{}".format(module.params["query_id"]),
                 api_version="2.0",
             )
             module.exit_json(changed=False, query=resp)

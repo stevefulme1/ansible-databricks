@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2026, Steve Fulmer
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -73,7 +69,7 @@ def main():
         if module.check_mode:
             module.exit_json(changed=True)
         resp = client.put(
-            "permissions/serving-endpoints/{0}".format(module.params["endpoint_id"]),
+            "permissions/serving-endpoints/{}".format(module.params["endpoint_id"]),
             data={"access_control_list": module.params["access_control_list"]},
         )
         module.exit_json(changed=True, permissions=resp)

@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2026, Steve Fulmer
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -64,8 +60,8 @@ def main():
     try:
         if module.check_mode:
             module.exit_json(changed=True)
-        client.post("sql/warehouses/{0}/stop".format(wid))
-        info = client.get("sql/warehouses/{0}".format(wid))
+        client.post(f"sql/warehouses/{wid}/stop")
+        info = client.get(f"sql/warehouses/{wid}")
         module.exit_json(changed=True, warehouse=info)
     except DatabricksError as e:
         module.fail_json(msg=str(e))

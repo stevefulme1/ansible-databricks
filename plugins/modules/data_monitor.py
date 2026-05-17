@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2026, Steve Fulmer
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -101,7 +97,7 @@ def main():
         if state == "absent":
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.delete("unity-catalog/tables/{0}/monitor".format(table_name))
+            client.delete(f"unity-catalog/tables/{table_name}/monitor")
             module.exit_json(changed=True)
 
         payload = {}
@@ -118,20 +114,20 @@ def main():
                 payload[key] = val
 
         try:
-            existing = client.get("unity-catalog/tables/{0}/monitor".format(table_name))
+            existing = client.get(f"unity-catalog/tables/{table_name}/monitor")
             if module.check_mode:
                 module.exit_json(changed=True, monitor=existing)
             client.put(
-                "unity-catalog/tables/{0}/monitor".format(table_name),
+                f"unity-catalog/tables/{table_name}/monitor",
                 data=payload,
             )
-            info = client.get("unity-catalog/tables/{0}/monitor".format(table_name))
+            info = client.get(f"unity-catalog/tables/{table_name}/monitor")
             module.exit_json(changed=True, monitor=info)
         except DatabricksError:
             if module.check_mode:
                 module.exit_json(changed=True)
             resp = client.post(
-                "unity-catalog/tables/{0}/monitor".format(table_name),
+                f"unity-catalog/tables/{table_name}/monitor",
                 data=payload,
             )
             module.exit_json(changed=True, monitor=resp)

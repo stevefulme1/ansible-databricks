@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2024, Steve Fulmer (@stevefulme1)
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -87,7 +83,7 @@ def main():
                 module.fail_json(msg="service_principal_id required for absent")
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.delete("preview/scim/v2/ServicePrincipals/{0}".format(sp_id))
+            client.delete(f"preview/scim/v2/ServicePrincipals/{sp_id}")
             module.exit_json(changed=True)
 
         payload = {
@@ -103,9 +99,7 @@ def main():
         if sp_id:
             if module.check_mode:
                 module.exit_json(changed=True)
-            updated = client.put(
-                "preview/scim/v2/ServicePrincipals/{0}".format(sp_id), data=payload
-            )
+            updated = client.put(f"preview/scim/v2/ServicePrincipals/{sp_id}", data=payload)
             module.exit_json(changed=True, service_principal=updated)
 
         if module.check_mode:

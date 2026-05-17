@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2026, Steve Fulmer
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -70,7 +66,7 @@ def main():
         if module.check_mode:
             module.exit_json(changed=True)
         resp = client.post(
-            "apps/{0}/deployments".format(module.params["name"]),
+            "apps/{}/deployments".format(module.params["name"]),
             data={"source_code_path": module.params["source_code_path"]},
         )
         module.exit_json(changed=True, deployment=resp)

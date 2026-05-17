@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2024, Steve Fulmer (@stevefulme1)
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -99,7 +95,7 @@ def main():
         if state == "absent":
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.delete("ip-access-lists/{0}".format(list_id))
+            client.delete(f"ip-access-lists/{list_id}")
             module.exit_json(changed=True)
 
         payload = {
@@ -114,7 +110,7 @@ def main():
         if list_id:
             if module.check_mode:
                 module.exit_json(changed=True)
-            resp = client.put("ip-access-lists/{0}".format(list_id), data=payload)
+            resp = client.put(f"ip-access-lists/{list_id}", data=payload)
             module.exit_json(changed=True, ip_access_list=resp)
 
         if module.check_mode:

@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2026, Steve Fulmer
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -114,9 +110,7 @@ def main():
                         "new_name": module.params["name"],
                     },
                 )
-            info = client.get(
-                "mlflow/experiments/get", params={"experiment_id": experiment_id}
-            )
+            info = client.get("mlflow/experiments/get", params={"experiment_id": experiment_id})
             module.exit_json(changed=True, experiment=info.get("experiment", info))
 
         payload = {"name": module.params["name"]}

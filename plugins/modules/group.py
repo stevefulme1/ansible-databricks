@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2024, Steve Fulmer (@stevefulme1)
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -63,7 +59,7 @@ def find_group_by_name(client, name):
     resp = client.get(
         "preview/scim/v2/Groups",
         params={
-            "filter": 'displayName eq "{0}"'.format(name),
+            "filter": f'displayName eq "{name}"',
         },
     )
     resources = resp.get("Resources", [])
@@ -93,7 +89,7 @@ def main():
     try:
         existing = None
         if group_id:
-            existing = client.get("preview/scim/v2/Groups/{0}".format(group_id))
+            existing = client.get(f"preview/scim/v2/Groups/{group_id}")
         elif display_name:
             existing = find_group_by_name(client, display_name)
 
@@ -102,7 +98,7 @@ def main():
                 module.exit_json(changed=False)
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.delete("preview/scim/v2/Groups/{0}".format(existing["id"]))
+            client.delete("preview/scim/v2/Groups/{}".format(existing["id"]))
             module.exit_json(changed=True)
 
         payload = {"schemas": ["urn:ietf:params:scim:schemas:core:2.0:Group"]}
@@ -114,9 +110,7 @@ def main():
         if existing:
             if module.check_mode:
                 module.exit_json(changed=True, group=existing)
-            updated = client.put(
-                "preview/scim/v2/Groups/{0}".format(existing["id"]), data=payload
-            )
+            updated = client.put("preview/scim/v2/Groups/{}".format(existing["id"]), data=payload)
             module.exit_json(changed=True, group=updated)
 
         if module.check_mode:

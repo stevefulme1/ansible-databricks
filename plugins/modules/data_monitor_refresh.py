@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2026, Steve Fulmer
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -63,11 +59,7 @@ def main():
     try:
         if module.check_mode:
             module.exit_json(changed=True)
-        resp = client.post(
-            "unity-catalog/tables/{0}/monitor/refreshes".format(
-                module.params["table_name"]
-            )
-        )
+        resp = client.post("unity-catalog/tables/{}/monitor/refreshes".format(module.params["table_name"]))
         module.exit_json(changed=True, refresh=resp)
     except DatabricksError as e:
         module.fail_json(msg=str(e))

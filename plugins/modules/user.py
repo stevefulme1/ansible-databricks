@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2024, Steve Fulmer (@stevefulme1)
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -66,7 +62,7 @@ def find_user_by_name(client, user_name):
     resp = client.get(
         "preview/scim/v2/Users",
         params={
-            "filter": 'userName eq "{0}"'.format(user_name),
+            "filter": f'userName eq "{user_name}"',
         },
     )
     resources = resp.get("Resources", [])
@@ -97,7 +93,7 @@ def main():
     try:
         existing = None
         if user_id:
-            existing = client.get("preview/scim/v2/Users/{0}".format(user_id))
+            existing = client.get(f"preview/scim/v2/Users/{user_id}")
         elif user_name:
             existing = find_user_by_name(client, user_name)
 
@@ -106,7 +102,7 @@ def main():
                 module.exit_json(changed=False)
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.delete("preview/scim/v2/Users/{0}".format(existing["id"]))
+            client.delete("preview/scim/v2/Users/{}".format(existing["id"]))
             module.exit_json(changed=True)
 
         payload = {"schemas": ["urn:ietf:params:scim:schemas:core:2.0:User"]}
@@ -120,9 +116,7 @@ def main():
         if existing:
             if module.check_mode:
                 module.exit_json(changed=True, user=existing)
-            updated = client.put(
-                "preview/scim/v2/Users/{0}".format(existing["id"]), data=payload
-            )
+            updated = client.put("preview/scim/v2/Users/{}".format(existing["id"]), data=payload)
             module.exit_json(changed=True, user=updated)
 
         if module.check_mode:

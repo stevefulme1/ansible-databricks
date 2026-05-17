@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2026, Steve Fulmer
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -91,7 +87,7 @@ def main():
         if state == "absent":
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.delete("git-credentials/{0}".format(credential_id))
+            client.delete(f"git-credentials/{credential_id}")
             module.exit_json(changed=True)
 
         payload = {}
@@ -103,8 +99,8 @@ def main():
         if credential_id:
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.patch("git-credentials/{0}".format(credential_id), data=payload)
-            info = client.get("git-credentials/{0}".format(credential_id))
+            client.patch(f"git-credentials/{credential_id}", data=payload)
+            info = client.get(f"git-credentials/{credential_id}")
             module.exit_json(changed=True, credential=info)
 
         if module.check_mode:

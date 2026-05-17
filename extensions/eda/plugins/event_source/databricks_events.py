@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2026, Steve Fulmer
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -8,17 +7,11 @@ Polls Databricks audit logs and cluster events, emitting structured events
 for cluster lifecycle changes, job failures, and security alerts.
 """
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
-
 import asyncio
+import json
 import time
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
-
-import json
-
 
 DOCUMENTATION = r"""
 ---
@@ -72,13 +65,13 @@ EXAMPLES = r"""
 
 def _api_get(host, token, path, params=None):
     """Make a GET request to the Databricks REST API."""
-    url = "{0}/api/2.0/{1}".format(host.rstrip("/"), path)
+    url = "{}/api/2.0/{}".format(host.rstrip("/"), path)
     if params:
-        query = "&".join("{0}={1}".format(k, v) for k, v in params.items())
-        url = "{0}?{1}".format(url, query)
+        query = "&".join(f"{k}={v}" for k, v in params.items())
+        url = f"{url}?{query}"
 
     req = Request(url)
-    req.add_header("Authorization", "Bearer {0}".format(token))
+    req.add_header("Authorization", f"Bearer {token}")
     req.add_header("Content-Type", "application/json")
 
     try:
@@ -115,10 +108,10 @@ def _poll_cluster_events(host, token, cluster_ids, since_ts):
             "order": "ASC",
             "limit": 50,
         }
-        url = "{0}/api/2.0/clusters/events".format(host.rstrip("/"))
+        url = "{}/api/2.0/clusters/events".format(host.rstrip("/"))
         data = json.dumps(payload).encode("utf-8")
         req = Request(url, data=data, method="POST")
-        req.add_header("Authorization", "Bearer {0}".format(token))
+        req.add_header("Authorization", f"Bearer {token}")
         req.add_header("Content-Type", "application/json")
 
         try:

@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2024, Steve Fulmer (@stevefulme1)
 # GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -111,9 +107,7 @@ def main():
         if module.check_mode:
             module.exit_json(changed=True)
         resp = client.post("policies/clusters/create", data=payload)
-        policy = client.get(
-            "policies/clusters/get", params={"policy_id": resp["policy_id"]}
-        )
+        policy = client.get("policies/clusters/get", params={"policy_id": resp["policy_id"]})
         module.exit_json(changed=True, policy=policy)
 
     except DatabricksError as e:

@@ -1,13 +1,8 @@
 """Unit tests for stevefulme1.databricks.token module."""
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
-
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
-
 
 MODULE_PATH = "ansible_collections.stevefulme1.databricks.plugins.modules.token"
 CLIENT_PATH = "ansible_collections.stevefulme1.databricks.plugins.module_utils.databricks_client"

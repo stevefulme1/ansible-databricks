@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2026, Steve Fulmer
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -72,7 +68,7 @@ def main():
         if module.check_mode:
             module.exit_json(changed=False)
         resp = client.post(
-            "serving-endpoints/{0}/invocations".format(module.params["name"]),
+            "serving-endpoints/{}/invocations".format(module.params["name"]),
             data={"inputs": module.params["inputs"]},
         )
         module.exit_json(changed=False, predictions=resp)

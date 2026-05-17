@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2026, Steve Fulmer
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -78,7 +74,7 @@ def main():
         if state == "absent":
             if module.check_mode:
                 module.exit_json(changed=True)
-            client.delete("unity-catalog/shares/{0}".format(name))
+            client.delete(f"unity-catalog/shares/{name}")
             module.exit_json(changed=True)
 
         payload = {"name": name}
@@ -86,11 +82,11 @@ def main():
             payload["comment"] = module.params["comment"]
 
         try:
-            existing = client.get("unity-catalog/shares/{0}".format(name))
+            existing = client.get(f"unity-catalog/shares/{name}")
             if module.check_mode:
                 module.exit_json(changed=True, share=existing)
-            client.patch("unity-catalog/shares/{0}".format(name), data=payload)
-            info = client.get("unity-catalog/shares/{0}".format(name))
+            client.patch(f"unity-catalog/shares/{name}", data=payload)
+            info = client.get(f"unity-catalog/shares/{name}")
             module.exit_json(changed=True, share=info)
         except DatabricksError:
             if module.check_mode:

@@ -1,11 +1,7 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2026, Steve Fulmer
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
 
 DOCUMENTATION = r"""
 ---
@@ -64,8 +60,8 @@ def main():
         name=dict(type="str", required=True),
     )
     argument_spec.update(
-        limit=dict(type='int', default=100),
-        offset=dict(type='int', default=0),
+        limit=dict(type="int", default=100),
+        offset=dict(type="int", default=0),
     )
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=True)
@@ -76,7 +72,7 @@ def main():
     )
 
     try:
-        info = client.get("unity-catalog/recipients/{0}".format(module.params["name"]))
+        info = client.get("unity-catalog/recipients/{}".format(module.params["name"]))
         module.exit_json(changed=False, recipient=info)
     except DatabricksError as e:
         module.fail_json(msg=str(e))

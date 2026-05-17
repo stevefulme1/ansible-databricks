@@ -1,13 +1,8 @@
 """Unit tests for stevefulme1.databricks.mlflow_registered_model module."""
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
-
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
-
 
 MODULE_PATH = "ansible_collections.stevefulme1.databricks.plugins.modules.mlflow_registered_model"
 CLIENT_PATH = "ansible_collections.stevefulme1.databricks.plugins.module_utils.databricks_client"
@@ -18,8 +13,8 @@ def mock_api_client():
     """Mock API client for mlflow_registered_model."""
     client = MagicMock()
     client.get.return_value = None
-    client.create.return_value = {"model_name": "res-123", "model_name": "test-mlflow_registered_model"}
-    client.update.return_value = {"model_name": "res-123", "model_name": "test-mlflow_registered_model-updated"}
+    client.create.return_value = {"id": "res-123", "model_name": "test-mlflow_registered_model"}
+    client.update.return_value = {"id": "res-123", "model_name": "test-mlflow_registered_model-updated"}
     client.delete.return_value = None
     client.list.return_value = []
     return client
@@ -29,7 +24,7 @@ def mock_api_client():
 def existing_resource():
     """Return a dict representing an existing mlflow_registered_model."""
     return {
-        "model_name": "res-123",
+        "id": "res-123",
         "model_name": "test-mlflow_registered_model",
         "state": "active",
     }
@@ -41,7 +36,7 @@ class TestCreateMlflowRegisteredModel:
     def test_create_returns_resource(self, mock_api_client):
         """Verify create returns resource dict with expected fields."""
         result = mock_api_client.create("mlflow_registered_model", {"model_name": "test-mlflow_registered_model"})
-        assert result["model_name"] == "res-123"
+        assert result["id"] == "res-123"
         assert result["model_name"] == "test-mlflow_registered_model"
         mock_api_client.create.assert_called_once()
 
@@ -143,7 +138,7 @@ class TestGetMlflowRegisteredModel:
         """Verify get returns resource when it exists."""
         mock_api_client.get.return_value = existing_resource
         result = mock_api_client.get("mlflow_registered_model", "res-123")
-        assert result["model_name"] == "res-123"
+        assert result["id"] == "res-123"
 
     def test_get_nonexistent(self, mock_api_client):
         """Verify get returns None for missing resource."""
@@ -165,8 +160,8 @@ class TestListMlflowRegisteredModel:
     def test_list_returns_all(self, mock_api_client):
         """Verify list returns all resources."""
         mock_api_client.list.return_value = [
-            {"model_name": "1", "model_name": "first"},
-            {"model_name": "2", "model_name": "second"},
+            {"id": "1", "model_name": "first"},
+            {"id": "2", "model_name": "second"},
         ]
         result = mock_api_client.list("mlflow_registered_model")
         assert len(result) == 2
@@ -178,7 +173,7 @@ class TestListMlflowRegisteredModel:
 
     def test_list_with_filter(self, mock_api_client):
         """Verify list applies filters."""
-        mock_api_client.list.return_value = [{"model_name": "1", "model_name": "match"}]
+        mock_api_client.list.return_value = [{"id": "1", "model_name": "match"}]
         result = mock_api_client.list("mlflow_registered_model", filters={"model_name": "match"})
         assert len(result) == 1
 
