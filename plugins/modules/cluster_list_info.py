@@ -11,19 +11,19 @@ description:
   - Return a list of all clusters in the workspace.
 version_added: "1.0.0"
 author: Steve Fulmer (@stevefulme1)
+  limit:
+    description:
+      - Maximum number of results to return.
+    type: int
+    default: 100
+  offset:
+    description:
+      - Number of results to skip for pagination.
+    type: int
+    default: 0
 extends_documentation_fragment:
   - stevefulme1.databricks.databricks
 options:
-    limit:
-        description:
-          - Maximum number of results to return.
-        type: int
-        default: 100
-    offset:
-        description:
-          - Number of results to skip for pagination.
-        type: int
-        default: 0
 """
 
 EXAMPLES = r"""
