@@ -1,0 +1,90 @@
+---
+# Integration tests for stevefulme1.databricks.secret_scope
+# These tests require valid credentials configured in integration_config.yml
+
+- name: Create secret_scope (check_mode)
+  stevefulme1.databricks.secret_scope:
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    state: present
+    name: "ansible-test-{{ resource_prefix }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  check_mode: true
+  register: check_result
+
+- name: Verify check_mode reports changed
+  ansible.builtin.assert:
+    that:
+      - check_result is changed
+
+- name: Create secret_scope
+  stevefulme1.databricks.secret_scope:
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    state: present
+    name: "ansible-test-{{ resource_prefix }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  register: create_result
+
+- name: Verify secret_scope was created
+  ansible.builtin.assert:
+    that:
+      - create_result is changed
+      - create_result.secret_scope is defined
+
+- name: Create secret_scope again (idempotency)
+  stevefulme1.databricks.secret_scope:
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    state: present
+    name: "ansible-test-{{ resource_prefix }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  register: idem_result
+
+- name: Verify idempotent create
+  ansible.builtin.assert:
+    that:
+      - idem_result is not changed
+
+- name: Delete secret_scope (check_mode)
+  stevefulme1.databricks.secret_scope:
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    state: absent
+    name: "ansible-test-{{ resource_prefix }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  check_mode: true
+  register: delete_check
+
+- name: Verify check_mode delete reports changed
+  ansible.builtin.assert:
+    that:
+      - delete_check is changed
+
+- name: Delete secret_scope
+  stevefulme1.databricks.secret_scope:
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    state: absent
+    name: "ansible-test-{{ resource_prefix }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  register: delete_result
+
+- name: Verify secret_scope was deleted
+  ansible.builtin.assert:
+    that:
+      - delete_result is changed
+
+- name: Delete secret_scope again (idempotent)
+  stevefulme1.databricks.secret_scope:
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    state: absent
+    name: "ansible-test-{{ resource_prefix }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  register: delete_idem
+
+- name: Verify idempotent delete
+  ansible.builtin.assert:
+    that:
+      - delete_idem is not changed

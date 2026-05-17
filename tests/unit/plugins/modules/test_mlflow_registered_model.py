@@ -1,4 +1,4 @@
-"""Unit tests for stevefulme1.databricks.catalog module."""
+"""Unit tests for stevefulme1.databricks.mlflow_registered_model module."""
 
 from __future__ import absolute_import, division, print_function
 
@@ -9,17 +9,17 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 
-MODULE_PATH = "ansible_collections.stevefulme1.databricks.plugins.modules.catalog"
+MODULE_PATH = "ansible_collections.stevefulme1.databricks.plugins.modules.mlflow_registered_model"
 CLIENT_PATH = "ansible_collections.stevefulme1.databricks.plugins.module_utils.databricks_client"
 
 
 @pytest.fixture
 def mock_api_client():
-    """Mock API client for catalog."""
+    """Mock API client for mlflow_registered_model."""
     client = MagicMock()
     client.get.return_value = None
-    client.create.return_value = {"catalog_name": "res-123", "catalog_name": "test-catalog"}
-    client.update.return_value = {"catalog_name": "res-123", "catalog_name": "test-catalog-updated"}
+    client.create.return_value = {"model_name": "res-123", "model_name": "test-mlflow_registered_model"}
+    client.update.return_value = {"model_name": "res-123", "model_name": "test-mlflow_registered_model-updated"}
     client.delete.return_value = None
     client.list.return_value = []
     return client
@@ -27,75 +27,75 @@ def mock_api_client():
 
 @pytest.fixture
 def existing_resource():
-    """Return a dict representing an existing catalog."""
+    """Return a dict representing an existing mlflow_registered_model."""
     return {
-        "catalog_name": "res-123",
-        "catalog_name": "test-catalog",
+        "model_name": "res-123",
+        "model_name": "test-mlflow_registered_model",
         "state": "active",
     }
 
 
-class TestCreateCatalog:
-    """Tests for creating a catalog."""
+class TestCreateMlflowRegisteredModel:
+    """Tests for creating a mlflow_registered_model."""
 
     def test_create_returns_resource(self, mock_api_client):
         """Verify create returns resource dict with expected fields."""
-        result = mock_api_client.create("catalog", {"catalog_name": "test-catalog"})
-        assert result["catalog_name"] == "res-123"
-        assert result["catalog_name"] == "test-catalog"
+        result = mock_api_client.create("mlflow_registered_model", {"model_name": "test-mlflow_registered_model"})
+        assert result["model_name"] == "res-123"
+        assert result["model_name"] == "test-mlflow_registered_model"
         mock_api_client.create.assert_called_once()
 
     def test_create_with_all_params(self, mock_api_client):
         """Verify create passes all parameters to API."""
         params = {
-            "catalog_name": "full-catalog",
+            "model_name": "full-mlflow_registered_model",
             "description": "Full test",
             "tags": {"env": "test"},
         }
-        mock_api_client.create("catalog", params)
-        mock_api_client.create.assert_called_once_with("catalog", params)
+        mock_api_client.create("mlflow_registered_model", params)
+        mock_api_client.create.assert_called_once_with("mlflow_registered_model", params)
 
     def test_create_api_error(self):
         """Verify API errors are raised on create."""
         client = MagicMock()
         client.create.side_effect = Exception("409 Conflict")
         with pytest.raises(Exception, match="409 Conflict"):
-            client.create("catalog", {"catalog_name": "dup"})
+            client.create("mlflow_registered_model", {"model_name": "dup"})
 
     def test_create_check_mode_no_api_call(self, mock_api_client):
         """Verify check_mode skips actual API call."""
         check_mode = True
         if check_mode:
-            result = {"changed": True, "catalog": {}}
+            result = {"changed": True, "mlflow_registered_model": {}}
         else:
-            result = mock_api_client.create("catalog", {})
+            result = mock_api_client.create("mlflow_registered_model", {})
         assert result["changed"] is True
         mock_api_client.create.assert_not_called()
 
 
-class TestUpdateCatalog:
-    """Tests for updating a catalog."""
+class TestUpdateMlflowRegisteredModel:
+    """Tests for updating a mlflow_registered_model."""
 
     def test_update_existing_resource(self, mock_api_client, existing_resource):
         """Verify update modifies existing resource."""
         mock_api_client.get.return_value = existing_resource
-        result = mock_api_client.update("catalog", "res-123", {"catalog_name": "updated"})
-        assert result["catalog_name"] == "test-catalog-updated"
+        result = mock_api_client.update("mlflow_registered_model", "res-123", {"model_name": "updated"})
+        assert result["model_name"] == "test-mlflow_registered_model-updated"
 
     def test_update_idempotent_no_change(self, mock_api_client, existing_resource):
         """Verify no update when params match existing state."""
         mock_api_client.get.return_value = existing_resource
         # Simulate idempotency check
-        desired = {"catalog_name": existing_resource["catalog_name"]}
-        current = {"catalog_name": existing_resource["catalog_name"]}
+        desired = {"model_name": existing_resource["model_name"]}
+        current = {"model_name": existing_resource["model_name"]}
         changed = desired != current
         assert changed is False
 
     def test_update_detects_changes(self, mock_api_client, existing_resource):
         """Verify update detects actual changes."""
         mock_api_client.get.return_value = existing_resource
-        desired = {"catalog_name": "new-name"}
-        current = {"catalog_name": existing_resource["catalog_name"]}
+        desired = {"model_name": "new-name"}
+        current = {"model_name": existing_resource["model_name"]}
         changed = desired != current
         assert changed is True
 
@@ -103,29 +103,29 @@ class TestUpdateCatalog:
         """Verify updating non-existent resource raises error."""
         mock_api_client.update.side_effect = Exception("404 Not Found")
         with pytest.raises(Exception, match="404 Not Found"):
-            mock_api_client.update("catalog", "bad-id", {})
+            mock_api_client.update("mlflow_registered_model", "bad-id", {})
 
 
-class TestDeleteCatalog:
-    """Tests for deleting a catalog."""
+class TestDeleteMlflowRegisteredModel:
+    """Tests for deleting a mlflow_registered_model."""
 
     def test_delete_existing(self, mock_api_client, existing_resource):
         """Verify delete calls API with correct ID."""
         mock_api_client.get.return_value = existing_resource
-        mock_api_client.delete("catalog", "res-123")
-        mock_api_client.delete.assert_called_once_with("catalog", "res-123")
+        mock_api_client.delete("mlflow_registered_model", "res-123")
+        mock_api_client.delete.assert_called_once_with("mlflow_registered_model", "res-123")
 
     def test_delete_nonexistent_is_noop(self, mock_api_client):
         """Verify deleting absent resource reports no change."""
         mock_api_client.get.return_value = None
-        result = mock_api_client.get("catalog", "missing-id")
+        result = mock_api_client.get("mlflow_registered_model", "missing-id")
         assert result is None
 
     def test_delete_check_mode(self, mock_api_client, existing_resource):
         """Verify check_mode delete does not call API."""
         check_mode = True
         if not check_mode:
-            mock_api_client.delete("catalog", "res-123")
+            mock_api_client.delete("mlflow_registered_model", "res-123")
         mock_api_client.delete.assert_not_called()
 
     def test_delete_api_error(self):
@@ -133,22 +133,22 @@ class TestDeleteCatalog:
         client = MagicMock()
         client.delete.side_effect = Exception("403 Forbidden")
         with pytest.raises(Exception, match="403 Forbidden"):
-            client.delete("catalog", "res-123")
+            client.delete("mlflow_registered_model", "res-123")
 
 
-class TestGetCatalog:
-    """Tests for getting a catalog."""
+class TestGetMlflowRegisteredModel:
+    """Tests for getting a mlflow_registered_model."""
 
     def test_get_existing(self, mock_api_client, existing_resource):
         """Verify get returns resource when it exists."""
         mock_api_client.get.return_value = existing_resource
-        result = mock_api_client.get("catalog", "res-123")
-        assert result["catalog_name"] == "res-123"
+        result = mock_api_client.get("mlflow_registered_model", "res-123")
+        assert result["model_name"] == "res-123"
 
     def test_get_nonexistent(self, mock_api_client):
         """Verify get returns None for missing resource."""
         mock_api_client.get.return_value = None
-        result = mock_api_client.get("catalog", "nonexistent")
+        result = mock_api_client.get("mlflow_registered_model", "nonexistent")
         assert result is None
 
     def test_get_api_timeout(self):
@@ -156,79 +156,79 @@ class TestGetCatalog:
         client = MagicMock()
         client.get.side_effect = TimeoutError("Connection timed out")
         with pytest.raises(TimeoutError):
-            client.get("catalog", "res-123")
+            client.get("mlflow_registered_model", "res-123")
 
 
-class TestListCatalog:
-    """Tests for listing catalog resources."""
+class TestListMlflowRegisteredModel:
+    """Tests for listing mlflow_registered_model resources."""
 
     def test_list_returns_all(self, mock_api_client):
         """Verify list returns all resources."""
         mock_api_client.list.return_value = [
-            {"catalog_name": "1", "catalog_name": "first"},
-            {"catalog_name": "2", "catalog_name": "second"},
+            {"model_name": "1", "model_name": "first"},
+            {"model_name": "2", "model_name": "second"},
         ]
-        result = mock_api_client.list("catalog")
+        result = mock_api_client.list("mlflow_registered_model")
         assert len(result) == 2
 
     def test_list_empty(self, mock_api_client):
         """Verify list returns empty for no resources."""
-        result = mock_api_client.list("catalog")
+        result = mock_api_client.list("mlflow_registered_model")
         assert result == []
 
     def test_list_with_filter(self, mock_api_client):
         """Verify list applies filters."""
-        mock_api_client.list.return_value = [{"catalog_name": "1", "catalog_name": "match"}]
-        result = mock_api_client.list("catalog", filters={"catalog_name": "match"})
+        mock_api_client.list.return_value = [{"model_name": "1", "model_name": "match"}]
+        result = mock_api_client.list("mlflow_registered_model", filters={"model_name": "match"})
         assert len(result) == 1
 
 
-class TestIdempotencyCatalog:
-    """Tests for idempotent behavior of catalog."""
+class TestIdempotencyMlflowRegisteredModel:
+    """Tests for idempotent behavior of mlflow_registered_model."""
 
     def test_create_existing_is_idempotent(self, mock_api_client, existing_resource):
         """Verify creating an already-existing resource is idempotent."""
         mock_api_client.get.return_value = existing_resource
-        current = mock_api_client.get("catalog", "res-123")
-        desired_params = {"catalog_name": current["catalog_name"]}
+        current = mock_api_client.get("mlflow_registered_model", "res-123")
+        desired_params = {"model_name": current["model_name"]}
         # If resource exists and matches desired state, no change
-        changed = desired_params["catalog_name"] != current["catalog_name"]
+        changed = desired_params["model_name"] != current["model_name"]
         assert changed is False
 
     def test_delete_absent_is_idempotent(self, mock_api_client):
         """Verify deleting an absent resource reports no change."""
         mock_api_client.get.return_value = None
-        exists = mock_api_client.get("catalog", "missing") is not None
+        exists = mock_api_client.get("mlflow_registered_model", "missing") is not None
         assert exists is False
 
 
-class TestErrorHandlingCatalog:
-    """Tests for error handling in catalog."""
+class TestErrorHandlingMlflowRegisteredModel:
+    """Tests for error handling in mlflow_registered_model."""
 
     def test_auth_failure(self):
         """Verify authentication failure is handled."""
         client = MagicMock()
         client.create.side_effect = Exception("401 Unauthorized")
         with pytest.raises(Exception, match="401 Unauthorized"):
-            client.create("catalog", {})
+            client.create("mlflow_registered_model", {})
 
     def test_rate_limit(self):
         """Verify rate-limit response is handled."""
         client = MagicMock()
         client.list.side_effect = Exception("429 Too Many Requests")
         with pytest.raises(Exception, match="429"):
-            client.list("catalog")
+            client.list("mlflow_registered_model")
 
     def test_server_error(self):
         """Verify 500 error is propagated."""
         client = MagicMock()
         client.get.side_effect = Exception("500 Internal Server Error")
         with pytest.raises(Exception, match="500"):
-            client.get("catalog", "res-123")
+            client.get("mlflow_registered_model", "res-123")
 
     def test_network_error(self):
         """Verify network connectivity errors are handled."""
         client = MagicMock()
         client.get.side_effect = ConnectionError("Failed to connect")
         with pytest.raises(ConnectionError):
-            client.get("catalog", "res-123")
+            client.get("mlflow_registered_model", "res-123")

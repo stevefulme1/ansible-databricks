@@ -1,0 +1,6 @@
+---
+# Integration test configuration for stevefulme1.databricks
+databricks_host: "CHANGEME"
+databricks_token: "CHANGEME"
+validate_certs: true
+resource_prefix: "ansible-ci-databricks"
