@@ -1,0 +1,103 @@
+---
+# extensions/audit/event_query.yml
+# Maps module return values to the AAP Normalized Resource Taxonomy
+# for indirect node counting.
+#
+# Databricks modules return API response dicts containing server-assigned
+# identifiers (cluster_id, warehouse_id, job_id, etc.) and display names.
+
+stevefulme1.databricks.cluster:
+  query: >-
+    {
+      name: .cluster.cluster_name,
+      canonical_facts: {
+        uuid: .cluster.cluster_id
+      },
+      facts: {
+        device_type: "virtual_machine"
+      }
+    }
+
+stevefulme1.databricks.sql_warehouse:
+  query: >-
+    {
+      name: .warehouse.name,
+      canonical_facts: {
+        uuid: .warehouse.id
+      },
+      facts: {
+        device_type: "data_warehouse"
+      }
+    }
+
+stevefulme1.databricks.job:
+  query: >-
+    {
+      name: (.job.settings.name // .job.name),
+      canonical_facts: {
+        uuid: (.job.job_id | tostring)
+      },
+      facts: {
+        device_type: "virtual_machine"
+      }
+    }
+
+stevefulme1.databricks.catalog:
+  query: >-
+    {
+      name: .catalog.name,
+      canonical_facts: {
+        uuid: .catalog.name
+      },
+      facts: {
+        device_type: "data_warehouse"
+      }
+    }
+
+stevefulme1.databricks.schema:
+  query: >-
+    {
+      name: .schema.name,
+      canonical_facts: {
+        uuid: .schema.full_name
+      },
+      facts: {
+        device_type: "data_warehouse"
+      }
+    }
+
+stevefulme1.databricks.metastore:
+  query: >-
+    {
+      name: .metastore.name,
+      canonical_facts: {
+        uuid: .metastore.metastore_id
+      },
+      facts: {
+        device_type: "data_warehouse"
+      }
+    }
+
+stevefulme1.databricks.serving_endpoint:
+  query: >-
+    {
+      name: .endpoint.name,
+      canonical_facts: {
+        uuid: .endpoint.id
+      },
+      facts: {
+        device_type: "api_endpoint"
+      }
+    }
+
+stevefulme1.databricks.instance_pool:
+  query: >-
+    {
+      name: .instance_pool.instance_pool_name,
+      canonical_facts: {
+        uuid: .instance_pool.instance_pool_id
+      },
+      facts: {
+        device_type: "virtual_machine"
+      }
+    }
