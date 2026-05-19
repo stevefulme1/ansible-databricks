@@ -25,6 +25,7 @@ options:
     api_key:
         description: API key.
         type: str
+        secret: true
         env:
             - name: DATABRICKS_API_KEY
 """
