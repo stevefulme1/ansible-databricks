@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.1] - 2026-05-18
+
+### Security
+- Added `no_log=True` to `personal_access_token` in repo_credential module
+- Added `no_log=True` to `sharing_code` in delta_recipient module
+- Protected `token_value` from appearing in logs via `no_log_values` in token module
+- Added `.gitignore` and removed tracked build artifacts
+
 ## [2.0.0] - 2026-05-17
 
 ### Added

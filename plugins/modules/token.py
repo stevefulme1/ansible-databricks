@@ -99,6 +99,7 @@ def main():
         if module.check_mode:
             module.exit_json(changed=True)
         resp = client.post("token/create", data=payload)
+        module.no_log_values.add(resp.get("token_value", ""))
         module.exit_json(
             changed=True,
             token_value=resp.get("token_value"),

@@ -1,0 +1,34 @@
+# Build artifacts
+*.tar.gz
+*.egg-info/
+
+# Python
+*.pyc
+__pycache__/
+
+# Testing
+.tox/
+tests/output/
+
+# Secrets and credentials
+.env
+.env.*
+*.pem
+*.key
+*.crt
+vault_pass*
+credentials*
+
+# Ansible
+*.retry
+collections/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Logs
+*.log

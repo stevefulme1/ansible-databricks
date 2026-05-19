@@ -69,7 +69,7 @@ def main():
         name=dict(type="str", required=True),
         comment=dict(type="str"),
         authentication_type=dict(type="str", choices=["TOKEN", "DATABRICKS"]),
-        sharing_code=dict(type="str", no_log=False),
+        sharing_code=dict(type="str", no_log=True),
     )
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=True)

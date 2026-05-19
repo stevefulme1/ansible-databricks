@@ -68,7 +68,7 @@ def main():
         credential_id=dict(type="int"),
         git_provider=dict(type="str"),
         git_username=dict(type="str"),
-        personal_access_token=dict(type="str", no_log=False),
+        personal_access_token=dict(type="str", no_log=True),
     )
 
     module = AnsibleModule(
