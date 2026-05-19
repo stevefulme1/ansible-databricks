@@ -3,7 +3,7 @@
 ## [2.1.2] - 2026-05-18
 
 ### Security
-- Add `secret: true` to inventory plugin api_key option
+- Inventory plugin api_key credential hardening
 
 ## [2.1.1] - 2026-05-18
 
