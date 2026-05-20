@@ -1,11 +1,11 @@
 ---
 namespace: stevefulme1
 name: databricks
-version: 2.1.2
+version: 0.1.0
 readme: README.md
 authors:
   - Steve Fulmer (@stevefulme1)
-description: Manage Databricks workspaces, clusters, Unity Catalog, IAM, jobs, and secrets.
+description: Manage Databricks workspaces, clusters, Unity Catalog, IAM, jobs, and secrets. Status: Pre-release. Under active development.
 license_file: LICENSE
 tags:
   - databricks
