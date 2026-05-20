@@ -8,7 +8,6 @@ authors:
 description: >-
   Manage Databricks workspaces, clusters, Unity Catalog, IAM, jobs, and
   secrets. Pre-release, under active development.
-license_file: LICENSE
 tags:
   - databricks
   - unitycatalog
