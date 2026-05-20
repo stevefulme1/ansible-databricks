@@ -41,7 +41,7 @@ EXAMPLES = r"""
 """
 
 RETURN = r"""
-update:
+pipeline_update:
   description: Update response.
   type: dict
   returned: always
@@ -80,7 +80,7 @@ def main():
             "pipelines/{}/updates".format(module.params["pipeline_id"]),
             data=payload,
         )
-        module.exit_json(changed=True, update=resp)
+        module.exit_json(changed=True, pipeline_update=resp)
     except DatabricksError as e:
         module.fail_json(msg=str(e))
 

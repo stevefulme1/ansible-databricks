@@ -5,7 +5,9 @@ version: 0.1.0
 readme: README.md
 authors:
   - Steve Fulmer (@stevefulme1)
-description: Manage Databricks workspaces, clusters, Unity Catalog, IAM, jobs, and secrets. Status: Pre-release. Under active development.
+description: >-
+  Manage Databricks workspaces, clusters, Unity Catalog, IAM, jobs, and
+  secrets. Pre-release, under active development.
 license_file: LICENSE
 tags:
   - databricks
