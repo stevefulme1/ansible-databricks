@@ -1,0 +1,73 @@
+---
+# Integration tests for stevefulme1.databricks.pipeline
+
+- name: Create pipeline
+  stevefulme1.databricks.pipeline:
+    name: "ansible-test-pipeline"
+    state: present
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  register: create_result
+
+- name: Verify creation
+  ansible.builtin.assert:
+    that:
+      - create_result is changed
+
+- name: Create pipeline again (idempotency)
+  stevefulme1.databricks.pipeline:
+    name: "ansible-test-pipeline"
+    state: present
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  register: idem_result
+
+- name: Verify idempotency
+  ansible.builtin.assert:
+    that:
+      - idem_result is not changed
+
+- name: Update pipeline
+  stevefulme1.databricks.pipeline:
+    name: "ansible-test-pipeline"
+    continuous: false
+    state: present
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  register: update_result
+
+- name: Verify update
+  ansible.builtin.assert:
+    that:
+      - update_result is changed
+
+- name: Delete pipeline
+  stevefulme1.databricks.pipeline:
+    name: "ansible-test-pipeline"
+    state: absent
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  register: delete_result
+
+- name: Verify deletion
+  ansible.builtin.assert:
+    that:
+      - delete_result is changed
+
+- name: Delete pipeline again (idempotency)
+  stevefulme1.databricks.pipeline:
+    name: "ansible-test-pipeline"
+    state: absent
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  register: delete_idem
+
+- name: Verify delete idempotency
+  ansible.builtin.assert:
+    that:
+      - delete_idem is not changed

@@ -1,0 +1,76 @@
+---
+# Integration tests for stevefulme1.databricks.sql_warehouse
+
+- name: Create sql_warehouse
+  stevefulme1.databricks.sql_warehouse:
+    name: "ansible-test-wh"
+    cluster_size: "2X-Small"
+    state: present
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  register: create_result
+
+- name: Verify creation
+  ansible.builtin.assert:
+    that:
+      - create_result is changed
+
+- name: Create sql_warehouse again (idempotency)
+  stevefulme1.databricks.sql_warehouse:
+    name: "ansible-test-wh"
+    cluster_size: "2X-Small"
+    state: present
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  register: idem_result
+
+- name: Verify idempotency
+  ansible.builtin.assert:
+    that:
+      - idem_result is not changed
+
+- name: Update sql_warehouse
+  stevefulme1.databricks.sql_warehouse:
+    name: "ansible-test-wh"
+    cluster_size: "2X-Small"
+    auto_stop_mins: 30
+    state: present
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  register: update_result
+
+- name: Verify update
+  ansible.builtin.assert:
+    that:
+      - update_result is changed
+
+- name: Delete sql_warehouse
+  stevefulme1.databricks.sql_warehouse:
+    name: "ansible-test-wh"
+    state: absent
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  register: delete_result
+
+- name: Verify deletion
+  ansible.builtin.assert:
+    that:
+      - delete_result is changed
+
+- name: Delete sql_warehouse again (idempotency)
+  stevefulme1.databricks.sql_warehouse:
+    name: "ansible-test-wh"
+    state: absent
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  register: delete_idem
+
+- name: Verify delete idempotency
+  ansible.builtin.assert:
+    that:
+      - delete_idem is not changed

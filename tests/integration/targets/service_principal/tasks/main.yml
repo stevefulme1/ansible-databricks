@@ -1,0 +1,73 @@
+---
+# Integration tests for stevefulme1.databricks.service_principal
+
+- name: Create service_principal
+  stevefulme1.databricks.service_principal:
+    display_name: "ansible-test-sp"
+    state: present
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  register: create_result
+
+- name: Verify creation
+  ansible.builtin.assert:
+    that:
+      - create_result is changed
+
+- name: Create service_principal again (idempotency)
+  stevefulme1.databricks.service_principal:
+    display_name: "ansible-test-sp"
+    state: present
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  register: idem_result
+
+- name: Verify idempotency
+  ansible.builtin.assert:
+    that:
+      - idem_result is not changed
+
+- name: Update service_principal
+  stevefulme1.databricks.service_principal:
+    display_name: "ansible-test-sp"
+    active: false
+    state: present
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  register: update_result
+
+- name: Verify update
+  ansible.builtin.assert:
+    that:
+      - update_result is changed
+
+- name: Delete service_principal
+  stevefulme1.databricks.service_principal:
+    display_name: "ansible-test-sp"
+    state: absent
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  register: delete_result
+
+- name: Verify deletion
+  ansible.builtin.assert:
+    that:
+      - delete_result is changed
+
+- name: Delete service_principal again (idempotency)
+  stevefulme1.databricks.service_principal:
+    display_name: "ansible-test-sp"
+    state: absent
+    host: "{{ databricks_host }}"
+    token: "{{ databricks_token }}"
+    validate_certs: "{{ validate_certs | default(true) }}"
+  register: delete_idem
+
+- name: Verify delete idempotency
+  ansible.builtin.assert:
+    that:
+      - delete_idem is not changed
