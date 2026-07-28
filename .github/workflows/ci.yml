@@ -10,6 +10,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v5
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v7
         with:
@@ -33,7 +35,7 @@ jobs:
           - ansible-version: "2.18"
             python: "3.13"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           path: ansible_collections/stevefulme1/databricks
       - uses: actions/setup-python@v7
@@ -49,7 +51,7 @@ jobs:
       matrix:
         python: ["3.12", "3.13"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           path: ansible_collections/stevefulme1/databricks
       - uses: actions/setup-python@v7
@@ -66,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           path: ansible_collections/stevefulme1/databricks
       - uses: actions/setup-python@v7
